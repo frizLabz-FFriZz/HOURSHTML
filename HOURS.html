@@ -1,384 +1,636 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Job Hours Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Roboto', sans-serif; background: #f5f5f5; padding: 20px; }
-    h1 { text-align: center; }
-    .header { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    select.pay-period-select { padding: 6px 12px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
-    .day-table { width: 100%; background: #fff; border-collapse: collapse; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .day-table th { padding: 12px; }
-    .day-header { background: #2a3f54; color: #fff; font-weight: bold; text-align: center; }
-    .day-total { background: #455a64; color: #fff; font-weight: bold; text-align: center; }
-    .day-table th, .day-table td { border-bottom: 1px solid #ddd; text-align: center; }
-    .day-table td { padding: 10px; }
-    .day-table tr:nth-child(even) { background: #f9f9f9; }
-    .btn { padding: 5px 10px; border: none; cursor: pointer; border-radius: 4px; margin: 2px; font-size: 14px; }
-    .btn-add { background: #4CAF50; color: #fff; }
-    .btn-check { background: #2196F3; color: #fff; }
-    .btn-edit { background: #ff9800; color: #fff; }
-    .btn-delete { background: #f44336; color: #fff; }
-    .btn-locate { background: #607d8b; color: #fff; margin-left: 5px; }
-    .btn-logs { background: #9c27b0; color: #fff; }
-    .btn-meta { background: #3f51b5; color: #fff; }
-    .totals { font-weight: bold; background: #fafafa; padding: 10px; }
-    #logPanel, #metaPanel { display: none; background:#222; color:#0f0; padding:10px; height:200px; overflow:auto; font-family:monospace; font-size:12px; margin-top:20px; }
-    input[type=text], select { padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-    .address-cell { display: flex; align-items: center; justify-content: center; }
-    .address-cell input { flex: 1; }
-    .action-row { display: flex; gap: 10px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Job Hours Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        select.pay-period-select {
+            padding: 3px 6px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .day-table {
+            width: 100%;
+            background: #fff;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-table th {
+            padding: 3px 6px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .day-header {
+            background: #2a3f54;
+            color: #fff;
+            /* font-weight: bold; */
+            text-align: center;
+        }
+
+        .day-total {
+            background: #455a64;
+            color: #fff;
+            /* font-weight: bold; */
+            text-align: center;
+        }
+
+        .day-table th,
+        .day-table td {
+            border-bottom: 2px solid #000;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .day-table th.job-col,
+        .day-table td.job-col,
+        .day-table td input.job-input {
+            text-align: left !important;
+        }
+
+        .day-table input[type="text"],
+        .day-table select {
+            display: inline-block;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .address-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 4px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .day-table td {
+            padding: 10px;
+        }
+
+        .day-table tr:nth-child(even) {
+            background: #ddd;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 14px;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+            color: #fff;
+        }
+
+        .btn-check {
+            background: #2196F3;
+            color: #fff;
+        }
+
+        .btn-edit {
+            background: #ff9800;
+            color: #fff;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: #fff;
+        }
+
+        .btn-locate {
+            background: #607d8b;
+            color: #fff;
+            margin-left: 5px;
+        }
+
+        .btn-logs {
+            background: #9c27b0;
+            color: #fff;
+        }
+
+        .btn-meta {
+            background: #3f51b5;
+            color: #fff;
+        }
+
+        .totals {
+            font-weight: bold;
+            background: #fafafa;
+            padding: 0px;
+        }
+
+        #logPanel,
+        #metaPanel {
+            display: none;
+            background: #222;
+            color: #0f0;
+            padding: 10px;
+            height: 200px;
+            overflow: auto;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        input[type=text],
+        select {
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2%;
+        }
+
+        .logo-container img {
+            height: 3vw;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="header">
-    <select id="payPeriodSelect" class="pay-period-select"></select>
-    <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
-  </div>
 
-  <div id="dayTables"></div>
-  <button class="btn btn-add" id="addDayButton">+ Add Today</button>
+    <div class="logo-container">
+        <a href="https://ibb.co/XZPZ9v52"><img src="https://i.ibb.co/8DwDJSxK/white-orange-wordstrans3.png"
+                alt="white-orange-wordstrans3" border="0"></a>
+    </div>
+    <div class="header">
+        <div style="align-items:left; gap:10px;">
+            <button class="btn btn-edit" id="daysManagerBtn" type="button">Days Worked Manager</button>
+            <div id="daysManagerDropdown"
+                style="align-items:left; display:none; position:relative; left:0; top:0px; background:#fff; border:1px solid #ccc; z-index:1000; padding:0px; box-shadow:0 2px 8px rgba(0,0,0,0.15); min-width:220px;">
+            </div>
+        </div>
+        <select id="payPeriodSelect" class="pay-period-select"></select>
+        <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
+    </div>
 
-  <div class="totals">Grand Total Hours: <span id="grandTotal">0</span></div>
-  <br>
-  <div class="action-row">
-    <button class="btn btn-add" id="generateInvoice">Generate Invoice</button>
-    <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
-    <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
-  </div>
+    <div id="dayTables"></div>
+    <button class="btn btn-add" id="addDayButton">+ Add Today</button>
 
-  <div id="logPanel"></div>
-  <div id="metaPanel"></div>
+    <div class="totals">Grand Total Hours: <span id="grandTotal">0</span></div>
+    <br>
+    <div class="action-row">
+        <button class="btn btn-add" id="generateInvoice">Generate Invoice</button>
+        <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
+        <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const JSONBIN_URL = "https://api.jsonbin.io/v3/b/6889ed007b4b8670d8a9b129";
-const JSONBIN_KEY = "$2a$10$aSeeuCiSQD9XH5npv2KfJOxBD/tRZYF.yGmd3sMxxxDYywj/ua8Da";
+    <div id="logPanel"></div>
+    <div id="metaPanel"></div>
 
-let state = { payPeriods: {}, Job_Meta: {} };
-let currentPeriod = "";
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const JSONBIN_URL = "https://api.jsonbin.io/v3/b/6889ed007b4b8670d8a9b129";
+        const JSONBIN_KEY = "$2a$10$aSeeuCiSQD9XH5npv2KfJOxBD/tRZYF.yGmd3sMxxxDYywj/ua8Da";
 
-function logMessage(msg, isError=false) {
-  const panel = document.getElementById("logPanel");
-  const line = document.createElement("div");
-  line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-  line.style.color = isError ? "red" : "#0f0";
-  panel.appendChild(line);
-  panel.scrollTop = panel.scrollHeight;
-}
+        let state = { payPeriods: {}, Job_Meta: {} };
+        let currentPeriod = "";
 
-async function fetchData() {
-  try {
-    const res = await fetch(JSONBIN_URL, { headers: { "X-Master-Key": JSONBIN_KEY }});
-    const data = await res.json();
-    state = data.record || { payPeriods: {}, Job_Meta: {} };
-    if (!state.Job_Meta) state.Job_Meta = {};
-    logMessage("Data loaded successfully.");
-  } catch(e) {
-    logMessage("Error loading data: " + e.message, true);
-  }
-}
+        function logMessage(msg, isError = false) {
+            const panel = document.getElementById("logPanel");
+            const line = document.createElement("div");
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            line.style.color = isError ? "red" : "#0f0";
+            panel.appendChild(line);
+            panel.scrollTop = panel.scrollHeight;
+        }
 
-async function saveData() {
-  try {
-    await fetch(JSONBIN_URL, { method: "PUT", headers: {
-      "Content-Type": "application/json",
-      "X-Master-Key": JSONBIN_KEY
-    }, body: JSON.stringify(state) });
-    logMessage("Changes saved to JSONBin.");
-    refreshMetaPanel();
-  } catch(e) {
-    logMessage("Error saving data: " + e.message, true);
-  }
-}
+        async function fetchData() {
+            try {
+                const res = await fetch(JSONBIN_URL, { headers: { "X-Master-Key": JSONBIN_KEY } });
+                const data = await res.json();
+                state = data.record || { payPeriods: {}, Job_Meta: {} };
+                if (!state.Job_Meta) state.Job_Meta = {};
+                logMessage("Data loaded successfully.");
+            } catch (e) {
+                logMessage("Error loading data: " + e.message, true);
+            }
+        }
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  const options = { weekday: 'long' };
-  const dayName = date.toLocaleDateString('en-US', options);
-  const formatted = date.toLocaleDateString('en-US', { month:'2-digit', day:'2-digit', year:'2-digit' });
-  return `${dayName} - ${formatted}`;
-}
+        async function saveData() {
+            try {
+                await fetch(JSONBIN_URL, {
+                    method: "PUT", headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": JSONBIN_KEY
+                    }, body: JSON.stringify(state)
+                });
+                logMessage("Changes saved to JSONBin.");
+                refreshMetaPanel();
+            } catch (e) {
+                logMessage("Error saving data: " + e.message, true);
+            }
+        }
 
-function formatPeriod(start, end) {
-  const s = new Date(start).toLocaleDateString('en-US', { month:'2-digit', day:'2-digit', year:'2-digit' });
-  const e = new Date(end).toLocaleDateString('en-US', { month:'2-digit', day:'2-digit', year:'2-digit' });
-  return `${s} - ${e}`;
-}
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'long' };
+            const dayName = date.toLocaleDateString('en-US', options);
+            const formatted = date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+            return `${dayName} - ${formatted}`;
+        }
 
-function getCurrentPeriodRange(date = new Date()) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day < 3 ? -4 : 3);
-  const start = new Date(d.setDate(diff));
-  const end = new Date(start); end.setDate(start.getDate() + 13);
-  return [start.toISOString().slice(0,10), end.toISOString().slice(0,10)];
-}
+        function formatPeriod(start, end) {
+            const s = new Date(start).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+            const e = new Date(end).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+            return `${s} - ${e}`;
+        }
 
-// preserve unlocked input values
-function captureInputs() {
-  const inputs = {};
-  document.querySelectorAll("tr").forEach(row => {
-    row.querySelectorAll("input, select").forEach(input => {
-      inputs[input.id] = input.value;
-    });
-  });
-  return inputs;
-}
-function restoreInputs(saved) {
-  for (const id in saved) {
-    const el = document.getElementById(id);
-    if (el) el.value = saved[id];
-  }
-}
+        function getCurrentPeriodRange(date = new Date()) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day < 3 ? -4 : 3);
+            const start = new Date(d.setDate(diff));
+            const end = new Date(start); end.setDate(start.getDate() + 13);
+            return [start.toISOString().slice(0, 10), end.toISOString().slice(0, 10)];
+        }
 
-function render() {
-  const savedInputs = captureInputs(); 
+        // preserve unlocked input values
+        function captureInputs() {
+            const inputs = {};
+            document.querySelectorAll("tr").forEach(row => {
+                row.querySelectorAll("input, select").forEach(input => {
+                    inputs[input.id] = input.value;
+                });
+            });
+            return inputs;
+        }
+        function restoreInputs(saved) {
+            for (const id in saved) {
+                const el = document.getElementById(id);
+                if (el) el.value = saved[id];
+            }
+        }
 
-  const container = document.getElementById("dayTables");
-  container.innerHTML = "";
-  let grandTotal = 0;
-  const jobs = state.payPeriods[currentPeriod]?.jobs || {};
-  const dates = Object.keys(jobs).sort();
+        function render() {
 
-  dates.forEach(date => {
-    let dailyTotal = 0;
-    state.payPeriods[currentPeriod].jobs[date].forEach(j => dailyTotal += j.hours);
+            const savedInputs = captureInputs();
+            const container = document.getElementById("dayTables");
+            container.innerHTML = "";
+            let grandTotal = 0;
 
-    const dayTable = document.createElement("table");
-    dayTable.className = "day-table";
-    const header = document.createElement("thead");
-    header.innerHTML = `
+            // --- Days Worked Manager logic ---
+            if (!window.daysManagerVisibility) window.daysManagerVisibility = {};
+            function getPayPeriodDates(periodKey) {
+                const [start, end] = periodKey.split('_to_');
+                const dates = [];
+                let d = new Date(start);
+                const endDate = new Date(end);
+                while (d <= endDate) {
+                    dates.push(d.toISOString().slice(0, 10));
+                    d.setDate(d.getDate() + 1);
+                }
+                return dates;
+            }
+            const jobs = state.payPeriods[currentPeriod]?.jobs || {};
+            const allDates = getPayPeriodDates(currentPeriod);
+            // Set default visibility: weekdays true, weekends only if data or previously checked
+            allDates.forEach(date => {
+                const dayObj = new Date(date);
+                const dayNum = dayObj.getDay();
+                const isWeekend = (dayNum === 0 || dayNum === 6);
+                const hasData = jobs[date] && jobs[date].length > 0;
+                if (window.daysManagerVisibility[date] === undefined) {
+                    window.daysManagerVisibility[date] = !isWeekend || hasData;
+                }
+            });
+
+            // Render Days Worked Manager dropdown
+            const dropdown = document.getElementById("daysManagerDropdown");
+            dropdown.innerHTML = "";
+            allDates.forEach(date => {
+                const dayObj = new Date(date);
+                const dayNum = dayObj.getDay();
+                const isWeekend = (dayNum === 0 || dayNum === 6);
+                const hasData = jobs[date] && jobs[date].length > 0;
+                // Always show in manager, but only allow unchecking weekdays, weekends only if checked or has data
+                const label = document.createElement("label");
+                label.style.display = "flex";
+                label.style.alignItems = "center";
+                label.style.marginBottom = "4px";
+                const cb = document.createElement("input");
+                cb.type = "checkbox";
+                cb.checked = !!window.daysManagerVisibility[date];
+                cb.onchange = () => {
+                    window.daysManagerVisibility[date] = cb.checked;
+                    render();
+                };
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(" " + dayObj.toLocaleDateString('en-US', { weekday: 'long', month: '2-digit', day: '2-digit' })));
+                dropdown.appendChild(label);
+            });
+
+            // Show/hide tables based on daysManagerVisibility
+            allDates.forEach(date => {
+                if (!window.daysManagerVisibility[date]) return;
+                let dailyTotal = 0;
+                if (jobs[date]) jobs[date].forEach(j => dailyTotal += j.hours);
+                const dayTable = document.createElement("table");
+                dayTable.className = "day-table";
+                const header = document.createElement("thead");
+                const dayObj = new Date(date);
+                const dayName = dayObj.toLocaleDateString('en-US', { weekday: 'long' });
+                const dateStr = dayObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+                header.innerHTML = `
       <tr>
-        <th class="day-header" colspan="4">${formatDate(date)}</th>
-        <th class="day-total">Total: ${dailyTotal.toFixed(1)}</th>
+        <th class="day-header" colspan="5" style="padding:0; background:transparent; border-bottom:none;">
+          <div style="display:flex; width:100%;">
+            <div style="flex:1; background:#2a3f54; color:#fff; font-weight:bold; text-align:center; padding:12px 0; border-right:1px solid #fff;">${dayName}</div>
+            <div style="flex:1; background:#2a3f54; color:#fff; font-weight:bold; text-align:center; padding:12px 0;">${dateStr}</div>
+          </div>
+        </th>
       </tr>
       <tr>
-        <th>Job</th><th>Hours</th><th>Description</th><th>Address</th><th>Actions</th>
+        <th class="job-col">Job</th><th>Hours</th><th>Address</th><th>Description</th><th>Actions</th>
       </tr>`;
-    dayTable.appendChild(header);
-
-    const tbody = document.createElement("tbody");
-    jobs[date].forEach((job, idx) => {
-      const row = document.createElement("tr");
-      if (job.locked) {
-        row.innerHTML = `
-          <td>${job.job}</td>
-          <td>${job.hours}</td>
-          <td>${job.desc}</td>
-          <td>${job.address || ""}</td>
-          <td>
-            <button class="btn btn-edit" onclick="toggleEdit('${date}', ${idx}, false)">Edit</button>
-            <button class="btn btn-delete" onclick="deleteJob('${date}', ${idx})">X</button>
+                dayTable.appendChild(header);
+                const tbody = document.createElement("tbody");
+                if (jobs[date]) jobs[date].forEach((job, idx) => {
+                    const row = document.createElement("tr");
+                    if (job.locked) {
+                        row.innerHTML = `
+          <td class="job-col" style="width:15%;">${job.job}</td>
+          <td style="width:10%; text-align:center;">${Number(job.hours).toFixed(1)}</td>
+          <td style="width:35%; text-align:center;">${job.address || ""}</td>
+          <td style="width:30%; text-align:center;">${job.desc}</td>
+          <td style="width:10%; white-space:nowrap; text-align:center;">
+            <span style="display:inline-flex; gap:4px;">
+              <button class="btn btn-edit" style="margin:0;" onclick="toggleEdit('${date}', ${idx}, false)">Edit</button>
+              <button class="btn btn-delete" style="margin:0;" onclick="deleteJob('${date}', ${idx})">X</button>
+            </span>
           </td>`;
-      } else {
-        row.innerHTML = `
-          <td><input type="text" id="job_${date}_${idx}" value="${job.job}" oninput="jobInputChange('${date}', ${idx})"></td>
-          <td>${generateHoursDropdown(`hours_${date}_${idx}`, job.hours)}</td>
-          <td><input type="text" id="desc_${date}_${idx}" value="${job.desc}"></td>
-          <td class="address-cell">
+                    } else {
+                        row.innerHTML = `
+          <td class="job-col" style="width:15%;"><input type="text" class="job-input" id="job_${date}_${idx}" value="${job.job}" oninput="jobInputChange('${date}', ${idx})"></td>
+          <td style="width:10%; text-align:center;">${generateHoursDropdown(`hours_${date}_${idx}`, job.hours)}</td>
+          <td class="address-cell" style="width:35%;">
             <input type="text" id="addr_${date}_${idx}" value="${job.address || ""}">
             <button class="btn btn-locate" onclick="getCurrentAddress('${date}', ${idx})">📍</button>
           </td>
-          <td>
-            <button class="btn btn-check" onclick="toggleEdit('${date}', ${idx}, true)">✔</button>
-            <button class="btn btn-delete" onclick="deleteJob('${date}', ${idx})">X</button>
+          <td style="width:30%; text-align:center;"><input type="text" id="desc_${date}_${idx}" value="${job.desc}"></td>
+          <td style="width:10%; white-space:nowrap; text-align:center;">
+            <span style="display:inline-flex; gap:4px;">
+              <button class="btn btn-check" style="margin:0;" onclick="toggleEdit('${date}', ${idx}, true)">✔</button>
+              <button class="btn btn-delete" style="margin:0;" onclick="deleteJob('${date}', ${idx})">X</button>
+            </span>
           </td>`;
-      }
-      tbody.appendChild(row);
-    });
+                    }
+                    tbody.appendChild(row);
+                });
+                // Total row at the bottom
+                const totalRow = document.createElement("tr");
+                totalRow.innerHTML = `
+      <td class="day-total" style="background: #607d8b; color: #fff; font-weight: bold; text-align: left;">Total</td>
+      <td class="day-total" style="background: #607d8b; color: #fff; font-weight: bold; text-align: center;">${dailyTotal.toFixed(1)}</td>
+      <td class="day-total" style="background: #607d8b; text-align: center;"></td>
+      <td class="day-total" style="background: #607d8b; text-align: center;"></td>
+      <td class="day-total" style="background: #607d8b; text-align: center;"></td>
+    `;
+                tbody.appendChild(totalRow);
+                // Add Job button row (centered, unaffected)
+                const addRow = document.createElement("tr");
+                addRow.innerHTML = `<td colspan="5" style="text-align: center;"><button class="btn btn-add" onclick="addJob('${date}')">+ Add Job</button></td>`;
+                tbody.appendChild(addRow);
+                dayTable.appendChild(tbody);
+                container.appendChild(dayTable);
+                grandTotal += dailyTotal;
+            });
 
-    const addRow = document.createElement("tr");
-    addRow.innerHTML = `<td colspan="5"><button class="btn btn-add" onclick="addJob('${date}')">+ Add Job</button></td>`;
-    tbody.appendChild(addRow);
 
-    dayTable.appendChild(tbody);
-    container.appendChild(dayTable);
-    grandTotal += dailyTotal;
-  });
+            document.getElementById("grandTotal").innerText = grandTotal.toFixed(1);
+            (function setupDaysManager() {
+                const btn = document.getElementById("daysManagerBtn");
+                const dropdown = document.getElementById("daysManagerDropdown");
+                if (!btn || !dropdown) return;
+                btn.onclick = function (e) {
+                    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+                    e.stopPropagation();
+                };
+                document.addEventListener("click", function (e) {
+                    if (dropdown.style.display === "block" && !dropdown.contains(e.target) && e.target !== btn) {
+                        dropdown.style.display = "none";
+                    }
+                });
+            })();
 
-  document.getElementById("grandTotal").innerText = grandTotal.toFixed(1);
+            populatePeriodDropdown();
+            restoreInputs(savedInputs);
+        }
 
-  populatePeriodDropdown();
-  restoreInputs(savedInputs); 
-}
+        function generateHoursDropdown(id, value) {
+            let options = "";
+            for (let i = 0; i <= 12; i += 0.5) {
+                const selected = i === value ? "selected" : "";
+                options += `<option value="${i}" ${selected}>${i}</option>`;
+            }
+            return `<select id="${id}">${options}</select>`;
+        }
 
-function generateHoursDropdown(id, value) {
-  let options = "";
-  for (let i = 0; i <= 12; i += 0.5) {
-    const selected = i === value ? "selected" : "";
-    options += `<option value="${i}" ${selected}>${i}</option>`;
-  }
-  return `<select id="${id}">${options}</select>`;
-}
+        async function getCurrentAddress(date, idx) {
+            if (!navigator.geolocation) { logMessage("Geolocation not supported", true); return; }
+            navigator.geolocation.getCurrentPosition(async pos => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    const data = await res.json();
+                    const address = data.display_name || `${lat}, ${lon}`;
+                    document.getElementById(`addr_${date}_${idx}`).value = address;
 
-async function getCurrentAddress(date, idx) {
-  if (!navigator.geolocation) { logMessage("Geolocation not supported", true); return; }
-  navigator.geolocation.getCurrentPosition(async pos => {
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-      const data = await res.json();
-      const address = data.display_name || `${lat}, ${lon}`;
-      document.getElementById(`addr_${date}_${idx}`).value = address;
+                    const jobName = document.getElementById(`job_${date}_${idx}`).value.trim();
+                    if (jobName) {
+                        const key = jobName.toLowerCase();
+                        if (!state.Job_Meta[key]) state.Job_Meta[key] = {};
+                        state.Job_Meta[key].address = address;
+                    }
 
-      const jobName = document.getElementById(`job_${date}_${idx}`).value.trim();
-      if (jobName) {
-        const key = jobName.toLowerCase();
-        if (!state.Job_Meta[key]) state.Job_Meta[key] = {};
-        state.Job_Meta[key].address = address;
-      }
+                    logMessage("Address autofilled and saved to meta.");
+                    saveData();
+                } catch (e) {
+                    logMessage("Error fetching address: " + e.message, true);
+                }
+            });
+        }
 
-      logMessage("Address autofilled and saved to meta.");
-      saveData();
-    } catch(e) {
-      logMessage("Error fetching address: " + e.message, true);
-    }
-  });
-}
+        function jobInputChange(date, idx) {
+            const jobField = document.getElementById(`job_${date}_${idx}`);
+            const addrField = document.getElementById(`addr_${date}_${idx}`);
+            const jobName = jobField.value.trim().toLowerCase();
+            if (state.Job_Meta[jobName]) {
+                addrField.value = state.Job_Meta[jobName].address || "";
+            } else {
+                addrField.value = "";
+            }
+        }
 
-function jobInputChange(date, idx) {
-  const jobField = document.getElementById(`job_${date}_${idx}`);
-  const addrField = document.getElementById(`addr_${date}_${idx}`);
-  const jobName = jobField.value.trim().toLowerCase();
-  if (state.Job_Meta[jobName]) {
-    addrField.value = state.Job_Meta[jobName].address || "";
-  } else {
-    addrField.value = "";
-  }
-}
+        function toggleEdit(date, idx, lock) {
+            if (lock) {
+                const job = document.getElementById(`job_${date}_${idx}`).value;
+                const hours = parseFloat(document.getElementById(`hours_${date}_${idx}`).value) || 0;
+                const desc = document.getElementById(`desc_${date}_${idx}`).value;
+                const address = document.getElementById(`addr_${date}_${idx}`).value;
+                state.payPeriods[currentPeriod].jobs[date][idx] = { job, hours, desc, address, locked: true };
 
-function toggleEdit(date, idx, lock) {
-  if (lock) {
-    const job = document.getElementById(`job_${date}_${idx}`).value;
-    const hours = parseFloat(document.getElementById(`hours_${date}_${idx}`).value) || 0;
-    const desc = document.getElementById(`desc_${date}_${idx}`).value;
-    const address = document.getElementById(`addr_${date}_${idx}`).value;
-    state.payPeriods[currentPeriod].jobs[date][idx] = { job, hours, desc, address, locked: true };
+                if (job) {
+                    const key = job.trim().toLowerCase();
+                    if (!state.Job_Meta[key]) state.Job_Meta[key] = {};
+                    if (address) state.Job_Meta[key].address = address;
+                }
 
-    if (job) {
-      const key = job.trim().toLowerCase();
-      if (!state.Job_Meta[key]) state.Job_Meta[key] = {};
-      if (address) state.Job_Meta[key].address = address;
-    }
+            } else {
+                state.payPeriods[currentPeriod].jobs[date][idx].locked = false;
+            }
+            saveData().then(render);
+        }
 
-  } else {
-    state.payPeriods[currentPeriod].jobs[date][idx].locked = false;
-  }
-  saveData().then(render);
-}
+        function deleteJob(date, idx) {
+            state.payPeriods[currentPeriod].jobs[date].splice(idx, 1);
+            if (state.payPeriods[currentPeriod].jobs[date].length === 0) delete state.payPeriods[currentPeriod].jobs[date];
+            saveData().then(render);
+        }
 
-function deleteJob(date, idx) {
-  state.payPeriods[currentPeriod].jobs[date].splice(idx,1);
-  if (state.payPeriods[currentPeriod].jobs[date].length === 0) delete state.payPeriods[currentPeriod].jobs[date];
-  saveData().then(render);
-}
+        function addJob(date) {
+            if (!state.payPeriods[currentPeriod].jobs[date]) state.payPeriods[currentPeriod].jobs[date] = [];
+            state.payPeriods[currentPeriod].jobs[date].push({ job: "", hours: 0, desc: "", address: "", locked: false });
+            saveData().then(render);
+        }
 
-function addJob(date) {
-  if (!state.payPeriods[currentPeriod].jobs[date]) state.payPeriods[currentPeriod].jobs[date] = [];
-  state.payPeriods[currentPeriod].jobs[date].push({job: "", hours: 0, desc: "", address: "", locked: false});
-  saveData().then(render);
-}
+        function populatePeriodDropdown() {
+            const dropdown = document.getElementById("payPeriodSelect");
+            dropdown.innerHTML = "";
+            Object.keys(state.payPeriods).sort().forEach(p => {
+                const opt = document.createElement("option");
+                const [start, end] = p.split("_to_");
+                opt.value = p;
+                opt.textContent = formatPeriod(start, end);
+                if (p === currentPeriod) opt.selected = true;
+                dropdown.appendChild(opt);
+            });
+        }
 
-function populatePeriodDropdown() {
-  const dropdown = document.getElementById("payPeriodSelect");
-  dropdown.innerHTML = "";
-  Object.keys(state.payPeriods).sort().forEach(p => {
-    const opt = document.createElement("option");
-    const [start, end] = p.split("_to_");
-    opt.value = p;
-    opt.textContent = formatPeriod(start, end);
-    if (p === currentPeriod) opt.selected = true;
-    dropdown.appendChild(opt);
-  });
-}
+        function refreshMetaPanel() {
+            const metaPanel = document.getElementById("metaPanel");
+            metaPanel.textContent = JSON.stringify(state.Job_Meta, null, 2);
+        }
 
-function refreshMetaPanel() {
-  const metaPanel = document.getElementById("metaPanel");
-  metaPanel.textContent = JSON.stringify(state.Job_Meta, null, 2);
-}
+        document.getElementById("payPeriodSelect").addEventListener("change", e => {
+            currentPeriod = e.target.value;
+            render();
+        });
 
-document.getElementById("payPeriodSelect").addEventListener("change", e => {
-  currentPeriod = e.target.value;
-  render();
-});
+        document.getElementById("editPeriodBtn").addEventListener("click", () => {
+            const [start, end] = currentPeriod.split("_to_");
+            const newStart = prompt("Enter new start date (YYYY-MM-DD):", start);
+            const newEnd = prompt("Enter new end date (YYYY-MM-DD):", end);
+            if (newStart && newEnd) {
+                const newKey = `${newStart}_to_${newEnd}`;
+                state.payPeriods[newKey] = state.payPeriods[currentPeriod];
+                if (newKey !== currentPeriod) delete state.payPeriods[currentPeriod];
+                currentPeriod = newKey;
+                saveData().then(render);
+            }
+        });
 
-document.getElementById("editPeriodBtn").addEventListener("click", () => {
-  const [start, end] = currentPeriod.split("_to_");
-  const newStart = prompt("Enter new start date (YYYY-MM-DD):", start);
-  const newEnd = prompt("Enter new end date (YYYY-MM-DD):", end);
-  if (newStart && newEnd) {
-    const newKey = `${newStart}_to_${newEnd}`;
-    state.payPeriods[newKey] = state.payPeriods[currentPeriod];
-    if (newKey !== currentPeriod) delete state.payPeriods[currentPeriod];
-    currentPeriod = newKey;
-    saveData().then(render);
-  }
-});
+        document.getElementById("addDayButton").addEventListener("click", () => {
+            const today = new Date().toISOString().slice(0, 10);
+            if (!state.payPeriods[currentPeriod].jobs[today]) state.payPeriods[currentPeriod].jobs[today] = [];
+            saveData().then(render);
+        });
 
-document.getElementById("addDayButton").addEventListener("click", () => {
-  const today = new Date().toISOString().slice(0,10);
-  if (!state.payPeriods[currentPeriod].jobs[today]) state.payPeriods[currentPeriod].jobs[today] = [];
-  saveData().then(render);
-});
+        document.getElementById("generateInvoice").addEventListener("click", () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text(`Invoice for ${formatPeriod(...currentPeriod.split("_to_"))}`, 10, 10);
+            const jobs = state.payPeriods[currentPeriod]?.jobs || {};
+            let y = 20;
+            for (const date in jobs) {
+                doc.text(`${formatDate(date)}:`, 10, y);
+                y += 10;
+                jobs[date].forEach(j => {
+                    doc.text(`   ${j.job} - ${j.hours}h - ${j.desc} - ${j.address}`, 10, y);
+                    y += 10;
+                });
+            }
+            doc.text(`Grand Total Hours: ${document.getElementById("grandTotal").innerText}`, 10, y + 10);
+            doc.save("invoice.pdf");
+        });
 
-document.getElementById("generateInvoice").addEventListener("click", () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.text(`Invoice for ${formatPeriod(...currentPeriod.split("_to_"))}`, 10, 10);
-  const jobs = state.payPeriods[currentPeriod]?.jobs || {};
-  let y = 20;
-  for (const date in jobs) {
-    doc.text(`${formatDate(date)}:`, 10, y);
-    y += 10;
-    jobs[date].forEach(j => {
-      doc.text(`   ${j.job} - ${j.hours}h - ${j.desc} - ${j.address}`, 10, y);
-      y += 10;
-    });
-  }
-  doc.text(`Grand Total Hours: ${document.getElementById("grandTotal").innerText}`, 10, y+10);
-  doc.save("invoice.pdf");
-});
+        document.getElementById("toggleLogs").addEventListener("click", () => {
+            const panel = document.getElementById("logPanel");
+            const btn = document.getElementById("toggleLogs");
+            if (panel.style.display === "none") {
+                panel.style.display = "block";
+                btn.textContent = "Hide Logs";
+            } else {
+                panel.style.display = "none";
+                btn.textContent = "Show Logs";
+            }
+        });
 
-document.getElementById("toggleLogs").addEventListener("click", () => {
-  const panel = document.getElementById("logPanel");
-  const btn = document.getElementById("toggleLogs");
-  if (panel.style.display === "none") {
-    panel.style.display = "block";
-    btn.textContent = "Hide Logs";
-  } else {
-    panel.style.display = "none";
-    btn.textContent = "Show Logs";
-  }
-});
+        document.getElementById("toggleMeta").addEventListener("click", () => {
+            const panel = document.getElementById("metaPanel");
+            const btn = document.getElementById("toggleMeta");
+            if (panel.style.display === "none") {
+                refreshMetaPanel();
+                panel.style.display = "block";
+                btn.textContent = "Hide Meta Data";
+            } else {
+                panel.style.display = "none";
+                btn.textContent = "Show Meta Data";
+            }
+        });
 
-document.getElementById("toggleMeta").addEventListener("click", () => {
-  const panel = document.getElementById("metaPanel");
-  const btn = document.getElementById("toggleMeta");
-  if (panel.style.display === "none") {
-    refreshMetaPanel();
-    panel.style.display = "block";
-    btn.textContent = "Hide Meta Data";
-  } else {
-    panel.style.display = "none";
-    btn.textContent = "Show Meta Data";
-  }
-});
-
-(async function init(){
-  await fetchData();
-  const [start,end] = getCurrentPeriodRange();
-  currentPeriod = `${start}_to_${end}`;
-  if (!state.payPeriods[currentPeriod]) state.payPeriods[currentPeriod] = { jobs: {} };
-  if (!state.Job_Meta) state.Job_Meta = {};
-  render();
-})();
-</script>
+        (async function init() {
+            await fetchData();
+            const [start, end] = getCurrentPeriodRange();
+            currentPeriod = `${start}_to_${end}`;
+            if (!state.payPeriods[currentPeriod]) state.payPeriods[currentPeriod] = { jobs: {} };
+            if (!state.Job_Meta) state.Job_Meta = {};
+            render();
+        })();
+    </script>
 </body>
+
 </html>
-
-
-
