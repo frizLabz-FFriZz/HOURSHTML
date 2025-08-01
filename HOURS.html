@@ -9,92 +9,96 @@
         body {
             font-family: 'Roboto', sans-serif;
             background: #f5f5f5;
-            padding: 20px;
+            padding: 10vw;
         }
-
         h1 {
             text-align: center;
         }
-
         h3 {
             text-align: center;
         }
-
         .header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
             gap: 10px;
             margin-bottom: 20px;
         }
-
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            flex-grow: 1;
+        }
         select.pay-period-select {
             padding: 3px 6px;
             font-size: 16px;
             border-radius: 6px;
             border: 1px solid #ccc;
+            align-items: center;
+            display: flex;
+            justify-self: center;
         }
-
         .day-table {
             width: 100%;
             background: #fff;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 6px rgba(0, 0, 0, 0.199);
+            border:3px solid #000000;
         }
-
         .day-table th {
             padding: 3px 6px;
             padding-left: 12px;
             padding-right: 12px;
         }
-
+        .day-table tr.header-row th {
+            background: hsl(234, 100%, 96%) !important;
+            color: #333 !important;
+        }
+        
         .day-header {
             background: #2a3f54;
             color: #fff;
             /* font-weight: bold; */
-            text-align: center;
         }
-
-
-
+        .day-table th,
         .day-table th,
         .day-table td {
-            border-bottom: 2px solid #000;
-            text-align: center;
-            vertical-align: middle;
+            border-bottom: 1px solid #000;
         }
-
+        .day-table tr:last-child td {
+            border-bottom: none !important;
+        }
         .day-table th.job-col,
         .day-table td.job-col,
         .day-table td input.job-input {
             text-align: left !important;
         }
-
         .day-table input[type="text"],
         .day-table select {
             display: inline-block;
             text-align: center;
             margin: 0 auto;
         }
-
         .address-cell {
-            display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 4px;
-            width: 100%;
-            min-width: 0;
         }
 
         .day-table td {
-            padding: 10px;
+            padding: 3px 5px;
         }
-
         .day-table tr:nth-child(even) {
-            background: #ddd;
+            background: #ebebeb;
         }
-
         .btn {
             padding: 5px 10px;
             border: none;
@@ -103,47 +107,39 @@
             margin: 2px;
             font-size: 14px;
         }
-
         .btn-add {
             background: #4CAF50;
             color: #fff;
         }
-
         .btn-check {
             background: #2196F3;
             color: #fff;
         }
-
         .btn-edit {
             background: #ff9800;
             color: #fff;
         }
-
         .btn-delete {
             background: #f44336;
             color: #fff;
         }
-
         .btn-locate {
             background: #607d8b;
             color: #fff;
             margin-left: 5px;
         }
-
         .btn-logs {
             background: #9c27b0;
             color: #fff;
         }
-
         .btn-meta {
             background: #3f51b5;
             color: #fff;
         }
-
         .totals {
             font-weight: bold;
             background: #fafafa;
-            padding: 0px;
+            padding: 10px;
         }
 
         #logPanel,
@@ -170,24 +166,20 @@
             display: flex;
             gap: 10px;
         }
-
         .logo-container {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 2%;
         }
-
         .logo-container img {
             height: 3vw;
         }
-
         .header-left {
             display: flex;
             align-items: left;
             gap: 10px;
         }
-
         .days-manager-dropdown {
             align-items: left;
             display: none;
@@ -201,57 +193,89 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             min-width: 220px;
         }
-
-        .day-header-wrapper {
+        /* .day-header-wrapper {
             padding: 0;
             background: transparent;
             border-bottom: none;
-        }
-
+        } */
         .day-header-inner {
             display: flex;
-            width: 100%;
         }
-
         .day-header-left {
             flex: 1;
             background: #2a3f54;
             color: #fff;
-            font-weight: bold;
             text-align: center;
-            padding: 12px 0;
+            padding: 5px 0;
             border-right: 1px solid #fff;
         }
-
         .day-header-right {
             flex: 1;
             background: #2a3f54;
             color: #fff;
-            font-weight: bold;
             text-align: center;
-            padding: 12px 0;
+            padding: 5px 0;
         }
-
-        .job-col-width { width: 15%; }
-        .hours-col-width { width: 10%; text-align: center; }
+        .job-col-width {
+          width: 15%;
+          text-align: center !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+        }
+        .hours-col-width {
+          width: 10%;
+          text-align: center !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+          vertical-align: middle;
+        }
+        .day-table td.hours-col-width {
+          text-align: center !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+        }
         .address-col-width { width: 35%; text-align: center; }
-        .desc-col-width { width: 30%; text-align: center; }
-        .actions-col-width { width: 10%; white-space: nowrap; text-align: center; }
-
+        .desc-col-width { width: 25%; text-align: center; }
+        .actions-col-width { width: 10%; text-align: center; }
         .inline-flex-gap { display: inline-flex; gap: 4px; }
         .no-margin { margin: 0; }
-
         .table-addrow { text-align: center; }
-
         .day-total {
             background: #607d8b;
             color: #fff;
             font-weight: bold;
+            text-align: center !important;
+            padding-left: 0 !important;
+            margin-left: 0 !important;
         }
-
-        .text-left { text-align: left; }
+        .hours-col-width, .day-total.text-center {
+          text-align: center !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+        }
+        .add-job-cell {
+            text-align: right;
+        }
         .text-center { text-align: center; }
         .days-manager-label { display: flex; align-items: center; margin-bottom: 4px; }
+
+        #jobSummary table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 30px;
+          box-shadow: 0 10px 6px rgba(0, 0, 0, 0.199);
+          border: 3px solid #000000;
+        }
+        #jobSummary th {
+          background: hsl(234, 100%, 96%) !important;
+          color: #333 !important;
+          padding: 3px 6px;
+          text-align: center;
+        }
+        #jobSummary td {
+          padding: 3px 6px;
+          text-align: center;
+        }
     </style>
 </head>
 
@@ -268,12 +292,15 @@
                 class="days-manager-dropdown">
             </div>
         </div>
-        <select id="payPeriodSelect" class="pay-period-select"></select>
-        <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
+        <div class="header-center">
+            <select id="payPeriodSelect" class="pay-period-select"></select>
+            <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
+        </div>
     </div>
 
     <div id="dayTables"></div>
-    <button class="btn btn-add" id="addDayButton">+ Add Today</button>
+
+    <div id="jobSummary"></div>
 
     <div class="totals">Grand Total Hours: <span id="grandTotal">0</span></div>
     <br>
@@ -439,19 +466,19 @@
                 const dateStr = dayObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
                 header.innerHTML = `
       <tr>
-        <th class="day-header day-header-wrapper" colspan="5">
+        <th class="day-header" colspan="5">
           <div class="day-header-inner">
             <div class="day-header-left">${dayName}</div>
             <div class="day-header-right">${dateStr}</div>
           </div>
         </th>
       </tr>
-      <tr>
-        <th class="job-col job-col-width">Job</th>
-        <th class="hours-col-width">Hours</th>
-        <th class="address-col-width">Address</th>
-        <th class="desc-col-width">Description</th>
-        <th class="actions-col-width">Actions</th>
+      <tr class="header-row">
+        <th class="job-col job-col-width" style="text-align:left; padding-left: 12px; margin-left: 0;">Job</th>
+        <th class="hours-col-width" style="text-align:center; vertical-align: middle;">Hours</th>
+        <th class="address-col-width" style="text-align:center;">Address</th>
+        <th class="desc-col-width" style="text-align:center;">Description</th>
+        <th class="actions-col-width" style="text-align:center;">Actions</th>
       </tr>`;
                 dayTable.appendChild(header);
                 const tbody = document.createElement("tbody");
@@ -487,26 +514,21 @@
                     }
                     tbody.appendChild(row);
                 });
-                // Total row at the bottom
+                // Total row at the bottom with Add Job button in last cell
                 const totalRow = document.createElement("tr");
                 totalRow.innerHTML = `
-      <td class="day-total text-left">Total</td>
-      <td class="day-total text-center">${dailyTotal.toFixed(1)}</td>
+      <td class="day-total text-left" style="text-align:left; padding-left: 12px; margin-left: 0;">Total</td>
+      <td class="day-total text-center" style="text-align:center; padding-left: 0; margin-left: 0;">${dailyTotal.toFixed(1)}</td>
       <td class="day-total text-center"></td>
       <td class="day-total text-center"></td>
-      <td class="day-total text-center"></td>
+      <td class="day-total text-center add-job-cell"><button class="btn btn-add" onclick="addJob('${date}')">+ Job</button></td>
     `;
                 tbody.appendChild(totalRow);
-                // Add Job button row (centered, unaffected)
-                const addRow = document.createElement("tr");
-                addRow.innerHTML = `<td colspan="5" class="table-addrow"><button class="btn btn-add" onclick="addJob('${date}')">+ Add Job</button></td>`;
-                tbody.appendChild(addRow);
                 dayTable.appendChild(tbody);
                 container.appendChild(dayTable);
                 grandTotal += dailyTotal;
             });
-
-
+            
             document.getElementById("grandTotal").innerText = grandTotal.toFixed(1);
             (function setupDaysManager() {
                 const btn = document.getElementById("daysManagerBtn");
@@ -525,6 +547,64 @@
 
             populatePeriodDropdown();
             restoreInputs(savedInputs);
+
+            // After rendering day tables, add job summary table
+            const jobSummaryDiv = document.getElementById("jobSummary");
+            jobSummaryDiv.innerHTML = "";
+            const jobTotals = {};
+            allDates.forEach(date => {
+                if (jobs[date]) jobs[date].forEach(j => {
+                  const key = j.job ? j.job.trim() : "";
+                  if (!key) return;
+                  if (!jobTotals[key]) jobTotals[key] = 0;
+                  jobTotals[key] += Number(j.hours) || 0;
+                });
+              });
+              const summaryTable = document.createElement("table");
+              summaryTable.className = "day-table";
+              const summaryHeader = document.createElement("thead");
+              summaryHeader.innerHTML = `
+                <tr class="header-row">
+                  <th style="text-align:left;">Job</th>
+                  <th style="text-align:center;">Total Hours</th>
+                </tr>
+              `;
+              summaryTable.appendChild(summaryHeader);
+              const summaryBody = document.createElement("tbody");
+              let summaryGrandTotal = 0;
+              Object.keys(jobTotals).forEach(job => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                  <td style="text-align:left;">${job}</td>
+                  <td style="text-align:center;">${jobTotals[job].toFixed(1)}</td>
+                `;
+                summaryBody.appendChild(row);
+                summaryGrandTotal += jobTotals[job];
+              });
+              // Grand total row
+              const grandRow = document.createElement("tr");
+              grandRow.innerHTML = `
+                <td class="day-total text-left">Grand Total</td>
+                <td class="day-total text-center">${summaryGrandTotal.toFixed(1)}</td>
+              `;
+              summaryBody.appendChild(grandRow);
+              summaryTable.appendChild(summaryBody);
+              jobSummaryDiv.appendChild(summaryTable);
+
+              // Align headers in day tables
+              // Find the header row and set styles
+              document.querySelectorAll(".day-table thead").forEach(thead => {
+                const headerRow = thead.querySelector(".header-row");
+                if (headerRow) {
+                  headerRow.querySelectorAll("th").forEach((th, index) => {
+                    if (index === 0) {
+                      th.style.textAlign = "left";
+                    } else {
+                      th.style.textAlign = "center";
+                    }
+                  });
+                }
+              });
         }
 
         function generateHoursDropdown(id, value) {
@@ -639,12 +719,6 @@
                 currentPeriod = newKey;
                 saveData().then(render);
             }
-        });
-
-        document.getElementById("addDayButton").addEventListener("click", () => {
-            const today = new Date().toISOString().slice(0, 10);
-            if (!state.payPeriods[currentPeriod].jobs[today]) state.payPeriods[currentPeriod].jobs[today] = [];
-            saveData().then(render);
         });
 
         document.getElementById("generateInvoice").addEventListener("click", () => {
