@@ -34,20 +34,22 @@
             align-items: center;
             gap: 10px;
             justify-content: center;
-            flex-grow: 1;
+            flex-grow: 0;
         }
         select.pay-period-select {
             padding: 3px 6px;
             font-size: 16px;
             border-radius: 6px;
             border: 1px solid #ccc;
-            align-items: center;
-            display: flex;
-            justify-self: center;
+            /* align-items: center; */
+            /* display: flex; */
+            /* justify-self: center; */
         }
         .day-table {
             width: 100%;
             background: #fff;
+            /* border-collapse: collapse; */
+            border-color: #607d8b;
             border-collapse: collapse;
             margin-bottom: 30px;
             box-shadow: 0 10px 6px rgba(0, 0, 0, 0.199);
@@ -57,6 +59,10 @@
             padding: 3px 6px;
             padding-left: 12px;
             padding-right: 12px;
+            border-right: 1px solid #000;
+        }
+        .day-table th:last-child {
+            border-right: none;
         }
         .day-table tr.header-row th {
             background: hsl(234, 100%, 96%) !important;
@@ -79,18 +85,31 @@
         .day-table th.job-col,
         .day-table td.job-col,
         .day-table td input.job-input {
-            text-align: left !important;
+
         }
         .day-table input[type="text"],
         .day-table select {
-            display: inline-block;
-            text-align: center;
-            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
         .address-cell {
+            display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            gap: 8px;
+            width: 100%;
+            min-width: 0;
+        }
+        .address-cell input[type="text"] {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin: 0;
+            display: block;
+            width: 100%;
+        }
+        .address-cell .btn-locate {
+            margin-left: 8px;
+            flex-shrink: 0;
         }
 
         .day-table td {
@@ -126,7 +145,6 @@
         .btn-locate {
             background: #607d8b;
             color: #fff;
-            margin-left: 5px;
         }
         .btn-logs {
             background: #9c27b0;
@@ -177,12 +195,12 @@
         }
         .header-left {
             display: flex;
-            align-items: left;
+            align-items: center;
             gap: 10px;
         }
         .days-manager-dropdown {
-            align-items: left;
             display: none;
+            flex-direction: column;
             position: relative;
             left: 0;
             top: 0;
@@ -474,11 +492,11 @@
         </th>
       </tr>
       <tr class="header-row">
-        <th class="job-col job-col-width" style="text-align:left; padding-left: 12px; margin-left: 0;">Job</th>
-        <th class="hours-col-width" style="text-align:center; vertical-align: middle;">Hours</th>
-        <th class="address-col-width" style="text-align:center;">Address</th>
-        <th class="desc-col-width" style="text-align:center;">Description</th>
-        <th class="actions-col-width" style="text-align:center;">Actions</th>
+        <th class="job-col job-col-width">Job</th>
+        <th class="hours-col-width">Hours</th>
+        <th class="address-col-width">Address</th>
+        <th class="desc-col-width">Description</th>
+        <th class="actions-col-width">Actions</th>
       </tr>`;
                 dayTable.appendChild(header);
                 const tbody = document.createElement("tbody");
