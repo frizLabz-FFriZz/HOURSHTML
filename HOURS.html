@@ -43,9 +43,7 @@
         }
 
         .day-table th {
-            padding: 3px 6px;
-            padding-left: 12px;
-            padding-right: 12px;
+            padding: 6px 12px;
         }
 
         .day-header {
@@ -72,9 +70,8 @@
 
         .day-table input[type="text"],
         .day-table select {
-            display: inline-block;
-            text-align: center;
-            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .address-cell {
@@ -184,13 +181,13 @@
 
         .header-left {
             display: flex;
-            align-items: left;
+            align-items: center;
             gap: 10px;
         }
 
         .days-manager-dropdown {
-            align-items: left;
             display: none;
+            flex-direction: column;
             position: relative;
             left: 0;
             top: 0;
@@ -233,10 +230,10 @@
         }
 
         .job-col-width { width: 15%; }
-        .hours-col-width { width: 10%; text-align: center; }
-        .address-col-width { width: 35%; text-align: center; }
-        .desc-col-width { width: 30%; text-align: center; }
-        .actions-col-width { width: 10%; white-space: nowrap; text-align: center; }
+        .hours-col-width { width: 10%; }
+        .address-col-width { width: 35%; }
+        .desc-col-width { width: 30%; }
+        .actions-col-width { width: 10%; white-space: nowrap; }
 
         .inline-flex-gap { display: inline-flex; gap: 4px; }
         .no-margin { margin: 0; }
