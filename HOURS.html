@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head
     <meta charset="UTF-8">
     <title>Job Hours Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&amp;display=swap" rel="stylesheet">
@@ -9,7 +9,8 @@
         body {
             font-family: 'Roboto', sans-serif;
             background: #f5f5f5;
-            padding: 10vw;
+            /* color: #ffe180 */
+            padding: 5vw;
         }
         h1 {
             text-align: center;
@@ -82,35 +83,15 @@
         .day-table tr:last-child td {
             border-bottom: none !important;
         }
-        .day-table th.job-col,
-        .day-table td.job-col,
-        .day-table td input.job-input {
 
-        }
         .day-table input[type="text"],
         .day-table select {
             width: 100%;
             box-sizing: border-box;
         }
-        .address-cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            min-width: 0;
-        }
-        .address-cell input[type="text"] {
-            flex: 1 1 auto;
-            min-width: 0;
-            margin: 0;
-            display: block;
-            width: 100%;
-        }
-        .address-cell .btn-locate {
-            margin-left: 8px;
-            flex-shrink: 0;
-        }
+
+
+
 
         .day-table td {
             padding: 3px 5px;
@@ -240,13 +221,7 @@
           padding-left: 0 !important;
           margin-left: 0 !important;
         }
-        .hours-col-width {
-          width: 10%;
-          text-align: center !important;
-          padding-left: 0 !important;
-          margin-left: 0 !important;
-          vertical-align: middle;
-        }
+
         .day-table td.hours-col-width {
           text-align: center !important;
           padding-left: 0 !important;
@@ -266,11 +241,7 @@
             padding-left: 0 !important;
             margin-left: 0 !important;
         }
-        .hours-col-width, .day-total.text-center {
-          text-align: center !important;
-          padding-left: 0 !important;
-          margin-left: 0 !important;
-        }
+
         .add-job-cell {
             text-align: right;
         }
@@ -314,6 +285,14 @@
             <select id="payPeriodSelect" class="pay-period-select"></select>
             <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
         </div>
+    </div>
+
+    <div id="dateEditContainer" style="display:none; margin-top:10px; gap:10px; flex-direction:column;">
+        <div style="display:flex; gap:10px;">
+            <input type="date" id="startDateInput" style="flex:1;">
+            <input type="date" id="endDateInput" style="flex:1;">
+        </div>
+        <button class="btn btn-check" id="savePeriodBtn">Save Period</button>
     </div>
 
     <div id="dayTables"></div>
@@ -376,16 +355,14 @@
         }
 
         function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            const options = { weekday: 'long' };
-            const dayName = date.toLocaleDateString('en-US', options);
-            const formatted = date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-            return `${dayName} - ${formatted}`;
+            // Format the date to 'Tue Jul 29 2025' style
+            return new Date(dateStr).toDateString();
         }
 
         function formatPeriod(start, end) {
-            const s = new Date(start).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-            const e = new Date(end).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+            // Format the start and end dates to 'Tue Jul 29 2025' style
+            const s = new Date(start).toDateString();
+            const e = new Date(end).toDateString();
             return `${s} - ${e}`;
         }
 
@@ -408,6 +385,7 @@
             });
             return inputs;
         }
+
         function restoreInputs(saved) {
             for (const id in saved) {
                 const el = document.getElementById(id);
@@ -416,7 +394,6 @@
         }
 
         function render() {
-
             const savedInputs = captureInputs();
             const container = document.getElementById("dayTables");
             container.innerHTML = "";
@@ -492,7 +469,7 @@
         </th>
       </tr>
       <tr class="header-row">
-        <th class="job-col job-col-width">Job</th>
+        <th class="job-col-width">Job</th>
         <th class="hours-col-width">Hours</th>
         <th class="address-col-width">Address</th>
         <th class="desc-col-width">Description</th>
@@ -504,7 +481,7 @@
                     const row = document.createElement("tr");
                     if (job.locked) {
                         row.innerHTML = `
-          <td class="job-col job-col-width">${job.job}</td>
+          <td class="job-col-width">${job.job}</td>
           <td class="hours-col-width">${Number(job.hours).toFixed(1)}</td>
           <td class="address-col-width">${job.address || ""}</td>
           <td class="desc-col-width">${job.desc}</td>
@@ -516,7 +493,7 @@
           </td>`;
                     } else {
                         row.innerHTML = `
-          <td class="job-col job-col-width"><input type="text" class="job-input" id="job_${date}_${idx}" value="${job.job}" oninput="jobInputChange('${date}', ${idx})"></td>
+          <td class="job-col-width"><input type="text" class="job-input" id="job_${date}_${idx}" value="${job.job}" oninput="jobInputChange('${date}', ${idx})"></td>
           <td class="hours-col-width">${generateHoursDropdown(`hours_${date}_${idx}`, job.hours)}</td>
           <td class="address-cell address-col-width">
             <input type="text" id="addr_${date}_${idx}" value="${job.address || ""}">
@@ -548,6 +525,7 @@
             });
             
             document.getElementById("grandTotal").innerText = grandTotal.toFixed(1);
+
             (function setupDaysManager() {
                 const btn = document.getElementById("daysManagerBtn");
                 const dropdown = document.getElementById("daysManagerDropdown");
@@ -578,16 +556,30 @@
                   jobTotals[key] += Number(j.hours) || 0;
                 });
               });
+
+              const jobSummaryTitle = document.createElement("h1");
+              jobSummaryTitle.textContent = "Jobs Summary";
+                jobSummaryDiv.appendChild(jobSummaryTitle);
+
               const summaryTable = document.createElement("table");
               summaryTable.className = "day-table";
-              const summaryHeader = document.createElement("thead");
-              summaryHeader.innerHTML = `
+
+            //   const summaryHeader = document.createElement("thead");
+            //   summaryHeader.innerHTML = `
+            //   <tr style="background-color: #2a3f54;">
+            //     <th colspan="2" style="color: #000; width: 100%; text-align:center;">Pay Period Summary</th>
+            //     </tr>
+            //     `;
+                // summaryTable.appendChild(summaryHeader);
+
+                const summaryRow = document.createElement("thead");
+                summaryRow.innerHTML = `
                 <tr class="header-row">
-                  <th style="text-align:left;">Job</th>
-                  <th style="text-align:center;">Total Hours</th>
+                    <th style="text-align:left;">Job</th>
+                    <th style="text-align:center;">Total Hours</th>
                 </tr>
-              `;
-              summaryTable.appendChild(summaryHeader);
+                `;
+                summaryTable.appendChild(summaryRow);
               const summaryBody = document.createElement("tbody");
               let summaryGrandTotal = 0;
               Object.keys(jobTotals).forEach(job => {
@@ -599,12 +591,14 @@
                 summaryBody.appendChild(row);
                 summaryGrandTotal += jobTotals[job];
               });
+
               // Grand total row
               const grandRow = document.createElement("tr");
               grandRow.innerHTML = `
-                <td class="day-total text-left">Grand Total</td>
-                <td class="day-total text-center">${summaryGrandTotal.toFixed(1)}</td>
+                <td style="text-align:left; background-color: #ffe180; color: #000; font-weight: bold;">Grand Total</td>
+                <td style="text-align:center; background-color: #ffe180; color: #000; font-weight: bold;">${summaryGrandTotal.toFixed(1)}</td>
               `;
+
               summaryBody.appendChild(grandRow);
               summaryTable.appendChild(summaryBody);
               jobSummaryDiv.appendChild(summaryTable);
@@ -612,16 +606,18 @@
               // Align headers in day tables
               // Find the header row and set styles
               document.querySelectorAll(".day-table thead").forEach(thead => {
+
                 const headerRow = thead.querySelector(".header-row");
+                // Ensure header row exists
                 if (headerRow) {
-                  headerRow.querySelectorAll("th").forEach((th, index) => {
-                    if (index === 0) {
-                      th.style.textAlign = "left";
-                    } else {
-                      th.style.textAlign = "center";
-                    }
-                  });
-                }
+                    headerRow.querySelectorAll("th").forEach((th, index) => {
+                        if (index === 0) {
+                        th.style.textAlign = "left";
+                        } else {
+                        th.style.textAlign = "center";
+                        }
+                    });
+                 }
               });
         }
 
@@ -727,15 +723,120 @@
         });
 
         document.getElementById("editPeriodBtn").addEventListener("click", () => {
-            const [start, end] = currentPeriod.split("_to_");
-            const newStart = prompt("Enter new start date (YYYY-MM-DD):", start);
-            const newEnd = prompt("Enter new end date (YYYY-MM-DD):", end);
+            let container = document.getElementById("dateEditContainer");
+            if (!container) {
+                container = document.createElement("div");
+                container.id = "dateEditContainer";
+                container.style.display = "flex";
+                container.style.flexDirection = "column";
+                container.style.gap = "10px";
+                container.style.marginTop = "10px";
+
+                const startDateInput = document.createElement("input");
+                startDateInput.type = "date";
+                startDateInput.id = "startDateInput";
+                startDateInput.style.flex = "1";
+
+                const endDateInput = document.createElement("input");
+                endDateInput.type = "date";
+                endDateInput.id = "endDateInput";
+                endDateInput.style.flex = "1";
+
+                const saveButton = document.createElement("button");
+                saveButton.textContent = "Save Period";
+                saveButton.className = "btn btn-check";
+                saveButton.id = "savePeriodBtn";
+
+                const periodList = document.createElement("div");
+                periodList.id = "periodList";
+                periodList.style.marginTop = "10px";
+                periodList.style.border = "1px solid #ccc";
+                periodList.style.padding = "10px";
+                periodList.style.backgroundColor = "#f9f9f9";
+
+                container.appendChild(startDateInput);
+                container.appendChild(endDateInput);
+                container.appendChild(saveButton);
+                container.appendChild(periodList);
+
+                const headerCenter = document.querySelector(".header-center");
+                headerCenter.parentNode.insertBefore(container, headerCenter.nextSibling);
+            } else {
+                container.style.display = "flex";
+            }
+
+            // Populate input boxes with the current period
+            const [currentStart, currentEnd] = currentPeriod.split("_to_");
+            document.getElementById("startDateInput").value = currentStart;
+            document.getElementById("endDateInput").value = currentEnd;
+
+            // Populate the list of pay periods
+            const periodList = document.getElementById("periodList");
+            periodList.innerHTML = "<h3>Pay Periods</h3>";
+            const payPeriodKeys = Object.keys(state.payPeriods);
+
+            payPeriodKeys.forEach((key) => {
+                const periodDiv = document.createElement("div");
+                periodDiv.style.display = "flex";
+                periodDiv.style.justifyContent = "space-between";
+                periodDiv.style.alignItems = "center";
+                periodDiv.style.marginBottom = "5px";
+
+                const periodLabel = document.createElement("span");
+                periodLabel.textContent = formatPeriod(...key.split("_to_"));
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "x";
+                deleteButton.className = "btn btn-delete";
+                deleteButton.disabled = payPeriodKeys.length === 1;
+                deleteButton.onclick = () => {
+                    if (payPeriodKeys.length > 1) {
+                        delete state.payPeriods[key];
+                        if (key === currentPeriod) {
+                            currentPeriod = payPeriodKeys.find((k) => k !== key);
+                        }
+                        saveData().then(() => {
+                            render();
+                            document.getElementById("editPeriodBtn").click(); // Refresh the list
+                        });
+                    }
+                };
+
+                periodDiv.appendChild(periodLabel);
+                periodDiv.appendChild(deleteButton);
+                periodList.appendChild(periodDiv);
+            });
+        });
+
+        document.getElementById("savePeriodBtn").addEventListener("click", () => {
+            const startDateInput = document.getElementById("startDateInput");
+            const endDateInput = document.getElementById("endDateInput");
+            const newStart = startDateInput.value;
+            const newEnd = endDateInput.value;
+
             if (newStart && newEnd) {
                 const newKey = `${newStart}_to_${newEnd}`;
-                state.payPeriods[newKey] = state.payPeriods[currentPeriod];
+                state.payPeriods[newKey] = state.payPeriods[currentPeriod] || { jobs: {} };
                 if (newKey !== currentPeriod) delete state.payPeriods[currentPeriod];
                 currentPeriod = newKey;
-                saveData().then(render);
+
+                // Update dropdown
+                const dropdown = document.getElementById("payPeriodSelect");
+                let option = Array.from(dropdown.options).find(opt => opt.value === newKey);
+                if (!option) {
+                    option = document.createElement("option");
+                    option.value = newKey;
+                    option.textContent = formatPeriod(newStart, newEnd);
+                    dropdown.appendChild(option);
+                }
+                dropdown.value = newKey;
+
+                saveData().then(() => {
+                    render();
+                    document.getElementById("dateEditContainer").style.display = "none";
+                });
+            } else {
+                logMessage("Please select valid start and end dates.", true);
             }
         });
 
