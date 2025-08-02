@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head
+<head>
     <meta charset="UTF-8">
     <title>Job Hours Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&amp;display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
+            background: url('https://i.ibb.co/DHDMrbc1/20250802-1516-Easton-Construction-Blueprint-Background-remix-01k1p6pp95ev4bpkcqzt30dhx7.png') no-repeat center center fixed;
+            background-size: cover;
             /* color: #ffe180 */
             padding: 5vw;
         }
@@ -113,6 +114,10 @@
         }
         .btn-check {
             background: #2196F3;
+            color: #fff;
+        }
+        .btn-view {
+            background: #607d8b;
             color: #fff;
         }
         .btn-edit {
@@ -292,8 +297,11 @@
             <input type="date" id="startDateInput" style="flex:1;">
             <input type="date" id="endDateInput" style="flex:1;">
         </div>
-        <button class="btn btn-check" id="savePeriodBtn">Save Period</button>
-        <div id="periodList" style="margin-top:10px; border:1px solid #ccc; padding:10px; background-color:#f9f9f9;"></div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-check" id="savePeriodBtn" style="flex:1;">Save Period</button>
+            <button class="btn btn-view" id="viewPeriodsBtn" style="flex:1;">View Periods</button>
+        </div>
+        <div id="periodList" style="display:none; margin-top:10px; border:1px solid #ccc; padding:10px; background-color:#f9f9f9;"></div>
     </div>
 
     <div id="dayTables"></div>
@@ -403,6 +411,33 @@
                 const el = document.getElementById(id);
                 if (el) el.value = saved[id];
             }
+        }
+
+        function populatePeriodList() {
+            const periodList = document.getElementById("periodList");
+            if (!periodList) return;
+            periodList.innerHTML = '<div style="font-style:italic;color:#666;margin-bottom:8px;">Checked periods will remain; unchecked periods will be removed.</div>';
+            const payPeriodKeys = Object.keys(state.payPeriods);
+            payPeriodKeys.forEach((key) => {
+                const wrapper = document.createElement("div");
+                const label = document.createElement("label");
+                label.style.display = "flex";
+                label.style.alignItems = "center";
+                label.style.gap = "5px";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = true;
+                checkbox.dataset.key = key;
+
+                const periodLabel = document.createElement("span");
+                periodLabel.textContent = formatPeriod(...key.split("_to_"));
+
+                label.appendChild(checkbox);
+                label.appendChild(periodLabel);
+                wrapper.appendChild(label);
+                periodList.appendChild(wrapper);
+            });
         }
 
         function render() {
@@ -742,49 +777,32 @@
             const [currentStart, currentEnd] = currentPeriod.split("_to_");
             document.getElementById("startDateInput").value = currentStart;
             document.getElementById("endDateInput").value = currentEnd;
+        });
 
-            function populatePeriodList() {
-                const periodList = document.getElementById("periodList");
-                periodList.innerHTML = "<h3>Pay Periods</h3>";
-                const payPeriodKeys = Object.keys(state.payPeriods);
-                payPeriodKeys.forEach((key) => {
-                    const periodDiv = document.createElement("div");
-                    periodDiv.style.display = "flex";
-                    periodDiv.style.justifyContent = "space-between";
-                    periodDiv.style.alignItems = "center";
-                    periodDiv.style.marginBottom = "5px";
-
-                    const periodLabel = document.createElement("span");
-                    periodLabel.textContent = formatPeriod(...key.split("_to_"));
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.textContent = "x";
-                    deleteButton.className = "btn btn-delete";
-                    deleteButton.disabled = payPeriodKeys.length === 1;
-                    deleteButton.onclick = () => {
-                        if (payPeriodKeys.length > 1 && confirm("Delete this pay period?")) {
-                            delete state.payPeriods[key];
-                            if (key === currentPeriod) {
-                                const remaining = Object.keys(state.payPeriods);
-                                currentPeriod = remaining[0] || "";
-                            }
-                            saveData().then(() => {
-                                render();
-                                populatePeriodList();
-                            });
-                        }
-                    };
-
-                    periodDiv.appendChild(periodLabel);
-                    periodDiv.appendChild(deleteButton);
-                    periodList.appendChild(periodDiv);
-                });
+        document.getElementById("viewPeriodsBtn").addEventListener("click", () => {
+            const list = document.getElementById("periodList");
+            if (list.style.display === "none") {
+                populatePeriodList();
+                list.style.display = "block";
+            } else {
+                list.style.display = "none";
             }
-
-            populatePeriodList();
         });
 
         document.getElementById("savePeriodBtn").addEventListener("click", () => {
+            const dropdown = document.getElementById("payPeriodSelect");
+            document.querySelectorAll('#periodList input[type="checkbox"]').forEach(cb => {
+                if (!cb.checked) {
+                    delete state.payPeriods[cb.dataset.key];
+                    const opt = Array.from(dropdown.options).find(o => o.value === cb.dataset.key);
+                    if (opt) opt.remove();
+                    if (cb.dataset.key === currentPeriod) {
+                        const remaining = Object.keys(state.payPeriods);
+                        currentPeriod = remaining[0] || "";
+                    }
+                }
+            });
+
             const startDateInput = document.getElementById("startDateInput");
             const endDateInput = document.getElementById("endDateInput");
             const newStart = startDateInput.value;
@@ -796,8 +814,6 @@
                 if (newKey !== currentPeriod) delete state.payPeriods[currentPeriod];
                 currentPeriod = newKey;
 
-                // Update dropdown
-                const dropdown = document.getElementById("payPeriodSelect");
                 let option = Array.from(dropdown.options).find(opt => opt.value === newKey);
                 if (!option) {
                     option = document.createElement("option");
@@ -809,6 +825,8 @@
 
                 saveData().then(() => {
                     render();
+                    populatePeriodList();
+                    document.getElementById("periodList").style.display = "none";
                     document.getElementById("dateEditContainer").style.display = "none";
                 });
             } else {
