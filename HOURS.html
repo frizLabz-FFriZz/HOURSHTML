@@ -293,6 +293,7 @@
             <input type="date" id="endDateInput" style="flex:1;">
         </div>
         <button class="btn btn-check" id="savePeriodBtn">Save Period</button>
+        <div id="periodList" style="margin-top:10px; border:1px solid #ccc; padding:10px; background-color:#f9f9f9;"></div>
     </div>
 
     <div id="dayTables"></div>
@@ -354,15 +355,26 @@
             }
         }
 
+        // Helpers to handle dates in local timezone to avoid off-by-one issues
+        function toLocalISO(date) {
+            const offset = date.getTimezoneOffset();
+            const local = new Date(date.getTime() - offset * 60000);
+            return local.toISOString().split('T')[0];
+        }
+
+        function parseLocal(dateStr) {
+            return new Date(`${dateStr}T00:00:00`);
+        }
+
         function formatDate(dateStr) {
             // Format the date to 'Tue Jul 29 2025' style
-            return new Date(dateStr).toDateString();
+            return parseLocal(dateStr).toDateString();
         }
 
         function formatPeriod(start, end) {
             // Format the start and end dates to 'Tue Jul 29 2025' style
-            const s = new Date(start).toDateString();
-            const e = new Date(end).toDateString();
+            const s = parseLocal(start).toDateString();
+            const e = parseLocal(end).toDateString();
             return `${s} - ${e}`;
         }
 
@@ -372,7 +384,7 @@
             const diff = d.getDate() - day + (day < 3 ? -4 : 3);
             const start = new Date(d.setDate(diff));
             const end = new Date(start); end.setDate(start.getDate() + 13);
-            return [start.toISOString().slice(0, 10), end.toISOString().slice(0, 10)];
+            return [toLocalISO(start), toLocalISO(end)];
         }
 
         // preserve unlocked input values
@@ -404,10 +416,10 @@
             function getPayPeriodDates(periodKey) {
                 const [start, end] = periodKey.split('_to_');
                 const dates = [];
-                let d = new Date(start);
-                const endDate = new Date(end);
+                let d = parseLocal(start);
+                const endDate = parseLocal(end);
                 while (d <= endDate) {
-                    dates.push(d.toISOString().slice(0, 10));
+                    dates.push(toLocalISO(d));
                     d.setDate(d.getDate() + 1);
                 }
                 return dates;
@@ -416,7 +428,7 @@
             const allDates = getPayPeriodDates(currentPeriod);
             // Set default visibility: weekdays true, weekends only if data or previously checked
             allDates.forEach(date => {
-                const dayObj = new Date(date);
+                const dayObj = parseLocal(date);
                 const dayNum = dayObj.getDay();
                 const isWeekend = (dayNum === 0 || dayNum === 6);
                 const hasData = jobs[date] && jobs[date].length > 0;
@@ -429,7 +441,7 @@
             const dropdown = document.getElementById("daysManagerDropdown");
             dropdown.innerHTML = "";
             allDates.forEach(date => {
-                const dayObj = new Date(date);
+                const dayObj = parseLocal(date);
                 const dayNum = dayObj.getDay();
                 const isWeekend = (dayNum === 0 || dayNum === 6);
                 const hasData = jobs[date] && jobs[date].length > 0;
@@ -444,7 +456,7 @@
                     render();
                 };
                 label.appendChild(cb);
-                label.appendChild(document.createTextNode(" " + dayObj.toLocaleDateString('en-US', { weekday: 'long', month: '2-digit', day: '2-digit' })));
+                label.appendChild(document.createTextNode(" " + dayObj.toLocaleDateString('en-US', { weekday: 'long', month: '2-digit', day: '2-digit' }))); 
                 dropdown.appendChild(label);
             });
 
@@ -456,7 +468,7 @@
                 const dayTable = document.createElement("table");
                 dayTable.className = "day-table";
                 const header = document.createElement("thead");
-                const dayObj = new Date(date);
+                const dayObj = parseLocal(date);
                 const dayName = dayObj.toLocaleDateString('en-US', { weekday: 'long' });
                 const dateStr = dayObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
                 header.innerHTML = `
@@ -723,89 +735,53 @@
         });
 
         document.getElementById("editPeriodBtn").addEventListener("click", () => {
-            let container = document.getElementById("dateEditContainer");
-            if (!container) {
-                container = document.createElement("div");
-                container.id = "dateEditContainer";
-                container.style.display = "flex";
-                container.style.flexDirection = "column";
-                container.style.gap = "10px";
-                container.style.marginTop = "10px";
+            const container = document.getElementById("dateEditContainer");
+            container.style.display = container.style.display === "none" ? "flex" : "none";
+            if (container.style.display === "none") return;
 
-                const startDateInput = document.createElement("input");
-                startDateInput.type = "date";
-                startDateInput.id = "startDateInput";
-                startDateInput.style.flex = "1";
-
-                const endDateInput = document.createElement("input");
-                endDateInput.type = "date";
-                endDateInput.id = "endDateInput";
-                endDateInput.style.flex = "1";
-
-                const saveButton = document.createElement("button");
-                saveButton.textContent = "Save Period";
-                saveButton.className = "btn btn-check";
-                saveButton.id = "savePeriodBtn";
-
-                const periodList = document.createElement("div");
-                periodList.id = "periodList";
-                periodList.style.marginTop = "10px";
-                periodList.style.border = "1px solid #ccc";
-                periodList.style.padding = "10px";
-                periodList.style.backgroundColor = "#f9f9f9";
-
-                container.appendChild(startDateInput);
-                container.appendChild(endDateInput);
-                container.appendChild(saveButton);
-                container.appendChild(periodList);
-
-                const headerCenter = document.querySelector(".header-center");
-                headerCenter.parentNode.insertBefore(container, headerCenter.nextSibling);
-            } else {
-                container.style.display = "flex";
-            }
-
-            // Populate input boxes with the current period
             const [currentStart, currentEnd] = currentPeriod.split("_to_");
             document.getElementById("startDateInput").value = currentStart;
             document.getElementById("endDateInput").value = currentEnd;
 
-            // Populate the list of pay periods
-            const periodList = document.getElementById("periodList");
-            periodList.innerHTML = "<h3>Pay Periods</h3>";
-            const payPeriodKeys = Object.keys(state.payPeriods);
+            function populatePeriodList() {
+                const periodList = document.getElementById("periodList");
+                periodList.innerHTML = "<h3>Pay Periods</h3>";
+                const payPeriodKeys = Object.keys(state.payPeriods);
+                payPeriodKeys.forEach((key) => {
+                    const periodDiv = document.createElement("div");
+                    periodDiv.style.display = "flex";
+                    periodDiv.style.justifyContent = "space-between";
+                    periodDiv.style.alignItems = "center";
+                    periodDiv.style.marginBottom = "5px";
 
-            payPeriodKeys.forEach((key) => {
-                const periodDiv = document.createElement("div");
-                periodDiv.style.display = "flex";
-                periodDiv.style.justifyContent = "space-between";
-                periodDiv.style.alignItems = "center";
-                periodDiv.style.marginBottom = "5px";
+                    const periodLabel = document.createElement("span");
+                    periodLabel.textContent = formatPeriod(...key.split("_to_"));
 
-                const periodLabel = document.createElement("span");
-                periodLabel.textContent = formatPeriod(...key.split("_to_"));
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "x";
-                deleteButton.className = "btn btn-delete";
-                deleteButton.disabled = payPeriodKeys.length === 1;
-                deleteButton.onclick = () => {
-                    if (payPeriodKeys.length > 1) {
-                        delete state.payPeriods[key];
-                        if (key === currentPeriod) {
-                            currentPeriod = payPeriodKeys.find((k) => k !== key);
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "x";
+                    deleteButton.className = "btn btn-delete";
+                    deleteButton.disabled = payPeriodKeys.length === 1;
+                    deleteButton.onclick = () => {
+                        if (payPeriodKeys.length > 1 && confirm("Delete this pay period?")) {
+                            delete state.payPeriods[key];
+                            if (key === currentPeriod) {
+                                const remaining = Object.keys(state.payPeriods);
+                                currentPeriod = remaining[0] || "";
+                            }
+                            saveData().then(() => {
+                                render();
+                                populatePeriodList();
+                            });
                         }
-                        saveData().then(() => {
-                            render();
-                            document.getElementById("editPeriodBtn").click(); // Refresh the list
-                        });
-                    }
-                };
+                    };
 
-                periodDiv.appendChild(periodLabel);
-                periodDiv.appendChild(deleteButton);
-                periodList.appendChild(periodDiv);
-            });
+                    periodDiv.appendChild(periodLabel);
+                    periodDiv.appendChild(deleteButton);
+                    periodList.appendChild(periodDiv);
+                });
+            }
+
+            populatePeriodList();
         });
 
         document.getElementById("savePeriodBtn").addEventListener("click", () => {
