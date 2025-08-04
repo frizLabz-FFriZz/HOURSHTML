@@ -9,7 +9,7 @@
       font-family: "Roboto", sans-serif;
       background: url("https://i.ibb.co/HDpk79fG/20250802-2351-Blueprint-Design-Focus-remix-01k1q45dyyeraatt9ae1cgfbmp.png") no-repeat center center fixed;
       background-size: cover;
-      padding: 2vh 20vw;
+      padding: 2vh 5%;
     }
 
     h1,
@@ -36,7 +36,7 @@
 
     select.pay-period-select {
       padding: 3px 6px;
-      font-size: 16px;
+      font-size: 20px;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
@@ -44,6 +44,7 @@
     .day-table {
       table-layout: fixed;
       width: 100%;
+      font-size: 26px
     }
 
     .day-table th,
@@ -62,7 +63,6 @@
       text-align: left;
       word-break: break-word;
       white-space: normal;
-      font-size: 75%
     }
 
     .day-table th:nth-child(2),
@@ -71,7 +71,6 @@
       width: 10%;
       min-width: 10%;
       text-align: center;
-      font-size: 75%
     }
 
     .day-table th:nth-child(3),
@@ -82,7 +81,6 @@
       text-align: center;
       word-break: break-word;
       white-space: normal;
-      font-size: 75%
     }
 
     .day-table th:nth-child(4),
@@ -93,7 +91,6 @@
       text-align: center;
       word-break: break-word;
       white-space: normal;
-      font-size: 75%
     }
 
     .day-table th:nth-child(5),
@@ -102,7 +99,6 @@
       width: 17.5%;
       min-width: 17.5%;
       text-align: center;
-      font-size: 75%
     }
 
     .day-table th:nth-child(6),
@@ -111,7 +107,6 @@
       width: 6%;
       min-width: 6%;
       text-align: center;
-      font-size: 75%
     }
 
     .day-table td:first-child {
@@ -176,21 +171,51 @@
     .btn-add {
       background: #4caf50;
       color: #fff;
+      font-size: 20px
     }
+    .btn-generate {
+      background: #009c06;
+      color: #fff;
+      font-size: 20px;
+      justify-content: center;
+    }
+    .btn-logs {
+      background: #523fc2;
+      color: #fff;
+      font-size: 20px;
+      justify-content: center;  
+    }
+    .btn-meta {
+      background: #1386a3;
+      color: #fff;
+      font-size: 20px;
+      justify-content: center;
+    }
+    .action-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+
 
     .btn-check {
       background: #2196f3;
       color: #fff;
+      font-size: 20px
     }
 
     .btn-edit {
       background: #ff9800;
       color: #fff;
+      font-size: 20px
     }
 
     .btn-delete {
       background: #f44336;
       color: #fff;
+      font-size: 20px
     }
 
     .totals {
@@ -382,7 +407,7 @@
 
   <br />
   <div class="action-row">
-    <button class="btn btn-add" id="generateInvoice">Generate Invoice</button>
+    <button class="btn btn-generate" id="generateInvoice">Generate Invoice</button>
     <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
     <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
   </div>
@@ -705,7 +730,7 @@
         if (jobs[date]) jobs[date].forEach((j) => (dailyTotal += j.hours));
         const dayTable = document.createElement("table");
         const colgroup = document.createElement("colgroup");
-        ["10%", "8%", "30%", "17.5%", "17.5%", "9%"].forEach((w) => {
+        ["10%", "8%", "40%", "15%", "14%", "9%"].forEach((w) => {
           const col = document.createElement("col");
           col.style.width = w;
           colgroup.appendChild(col);
