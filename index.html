@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head <meta charset="UTF-8">
+<head>
+  <meta charset="UTF-8">
   <title>Job Hours Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&amp;display=swap" rel="stylesheet" />
   <style>
@@ -173,24 +174,28 @@
       color: #fff;
       font-size: 20px
     }
+
     .btn-generate {
       background: #009c06;
       color: #fff;
       font-size: 20px;
       justify-content: center;
     }
+
     .btn-logs {
       background: #523fc2;
       color: #fff;
       font-size: 20px;
-      justify-content: center;  
+      justify-content: center;
     }
+
     .btn-meta {
       background: #1386a3;
       color: #fff;
       font-size: 20px;
       justify-content: center;
     }
+
     .action-row {
       display: flex;
       justify-content: center;
@@ -296,7 +301,7 @@
     }
 
     /* Login section styles */
-    #loginSection {
+    #loginSection, #createAccountSection {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -305,11 +310,11 @@
       color: #fff;
     }
 
-    #loginSection h1 {
+    #loginSection h1, #createAccountSection h1 {
       margin-bottom: 20px;
     }
 
-    #loginSection input {
+    #loginSection input, #createAccountSection input {
       margin-bottom: 10px;
       padding: 10px;
       width: 300px;
@@ -318,7 +323,7 @@
       background: rgba(255, 255, 255, 0.8);
     }
 
-    #loginSection button {
+    #loginSection button, #createAccountSection button {
       margin-bottom: 10px;
       padding: 10px;
       width: 320px;
@@ -338,12 +343,12 @@
       color: #fff;
     }
 
-    #loginSection #submitButton {
+    #createAccountSection #submitButton {
       background: #4caf50;
       color: #fff;
     }
 
-    #loginSection #backButton {
+    #createAccountSection #backButton {
       background: #c72c2c;
       color: #fff;
     }
@@ -356,69 +361,104 @@
 </head>
 
 <body>
-  <div class="logo-container">
-    <a href="https://ibb.co/NgFdFnhr"><img src="https://i.ibb.co/HLKfKpvC/DDFGTDGDsdfsdf-G.png"
-        alt="Easton Construction Logo" border="0" /></a>
-  </div>
-  <div class="header">
-    <div class="header-left">
-      <button class="btn btn-edit" id="daysManagerBtn" type="button">
-        Days Worked Manager
-      </button>
-      <div id="daysManagerDropdown" class="days-manager-dropdown"></div>
+
+  <div id="loginSection" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <h1>Login</h1>
+    <div style="display: flex; flex-direction: row; gap: 10px;">
+      <input type="text" id="firstName" placeholder="First Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px;">
+      <input type="text" id="lastName" placeholder="Last Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px;">
     </div>
-    <div class="header-center">
-      <select id="payPeriodSelect" class="pay-period-select"></select>
-      <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
-      <button class="btn btn-add" id="addPeriodBtn">Add Period</button>
-    </div>
+    <input type="password" id="pin" placeholder="Enter Pin #"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <button id="loginButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Login</button>
+    <button id="createAccountButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Create Account</button>
   </div>
 
-  <div id="dateEditContainer" style="display: none; margin-top: 10px; gap: 10px; flex-direction: column">
-    <div style="display: flex; gap: 10px">
-      <input type="date" id="startDateInput" style="flex: 1; font-size: 18px;" />
-      <input type="date" id="endDateInput" style="flex: 1; font-size: 18px;" />
+  <div id="createAccountSection"
+    style="display: none; flex-direction: column; align-items: center; justify-content: center;">
+
+    <h1>Create Account</h1>
+    <div style="display: flex; flex-direction: row; gap: 10px;">
+      <input type="text" id="createAccountFirstName" placeholder="First Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px">
+      <input type="text" id="createAccountLastName" placeholder="Last Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px">
     </div>
-    <div style="display: flex; gap: 10px; width: 100%">
-      <button class="btn btn-check half-btn margin-bottom" id="savePeriodBtn">
-        Save Period
-      </button>
-      <button class="btn btn-cancel half-btn margin-bottom" id="cancelPeriodBtn">
-        Cancel
-      </button>
-      <button class="btn btn-view half-btn margin-bottom" id="viewPeriodsBtn">
-        View Periods
-      </button>
+    <input type="password" id="createAccountPin" placeholder="Enter Pin # (4 or more)"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <input type="password" id="createAccountRePin" placeholder="Re-Enter Pin #"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <button id="submitButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Submit</button>
+    <button id="backButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Back</button>
+  </div>
+
+  <div id="mainContent" style="display: none;">
+    <div class="logo-container">
+      <a href="https://ibb.co/NgFdFnhr"><img src="https://i.ibb.co/HLKfKpvC/DDFGTDGDsdfsdf-G.png"
+          alt="Easton Construction Logo" border="0" /></a>
     </div>
-    <div id="periodDropdown" style="
+    <div class="header">
+      <div class="header-left">
+        <button class="btn btn-edit" id="daysManagerBtn" type="button">
+          Days Worked Manager
+        </button>
+        <div id="daysManagerDropdown" class="days-manager-dropdown"></div>
+      </div>
+      <div class="header-center">
+        <select id="payPeriodSelect" class="pay-period-select"></select>
+        <button class="btn btn-edit" id="editPeriodBtn">Edit Period</button>
+        <button class="btn btn-add" id="addPeriodBtn">Add Period</button>
+      </div>
+    </div>
+
+    <div id="dateEditContainer" style="display: none; margin-top: 10px; gap: 10px; flex-direction: column">
+      <div style="display: flex; gap: 10px">
+        <input type="date" id="startDateInput" style="flex: 1; font-size: 18px;" />
+        <input type="date" id="endDateInput" style="flex: 1; font-size: 18px;" />
+      </div>
+      <div style="display: flex; gap: 10px; width: 100%">
+        <button class="btn btn-check half-btn margin-bottom" id="savePeriodBtn">
+          Save Period
+        </button>
+        <button class="btn btn-cancel half-btn margin-bottom" id="cancelPeriodBtn">
+          Cancel
+        </button>
+        <button class="btn btn-view half-btn margin-bottom" id="viewPeriodsBtn">
+          View Periods
+        </button>
+      </div>
+      <div id="periodDropdown" style="
           display: none;
           margin-top: 3px;
           border: 1px solid #ccc;
           padding: 10px;
           background-color: #f9f9f9;
         ">
-      <p style="
+        <p style="
             font-style: italic;
             color: #777;
             margin-top: 0;
             margin-bottom: 8px;
           "></p>
+      </div>
     </div>
+
+    <div id="dayTables"></div>
+
+    <div id="jobSummary"></div>
+
+    <br />
+    <div class="action-row">
+      <button class="btn btn-generate" id="generateInvoice">Generate Invoice</button>
+      <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
+      <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
+    </div>
+
+    <div id="logPanel"></div>
+    <div id="metaPanel"></div>
   </div>
-
-  <div id="dayTables"></div>
-
-  <div id="jobSummary"></div>
-
-  <br />
-  <div class="action-row">
-    <button class="btn btn-generate" id="generateInvoice">Generate Invoice</button>
-    <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
-    <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
-  </div>
-
-  <div id="logPanel"></div>
-  <div id="metaPanel"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
@@ -1211,7 +1251,7 @@
       document.getElementById("dateEditContainer").style.display = "none";
       document.getElementById("periodDropdown").style.display = "none";
     });
-    
+
     document.getElementById("savePeriodBtn").addEventListener("click", () => {
       const startDateInput = document.getElementById("startDateInput");
       const endDateInput = document.getElementById("endDateInput");
@@ -1429,9 +1469,6 @@
       // Show login or create account UI
       if (!mappings || Object.keys(mappings).length === 0) {
         showCreateAccountForm();
-      } else {
-        document.getElementById("loginSection").style.display = "flex";
-        document.getElementById("mainContent").style.display = "none";
       }
     }
 
@@ -1455,130 +1492,112 @@
     }
 
     // Run init_login on DOMContentLoaded
+    // ====== Startup: Always DOMContentLoaded ======
+    window.addEventListener("DOMContentLoaded", function () {
+      const test = false; // Set to true for dev, false for real use
 
-    const test = false
-
-    if (test) {
-      bin_id = '68904e93ae596e708fc115c7'
-      currentUser = 'test test'
-      window.addEventListener("DOMContentLoaded", init);
-    } else {
-
-      // Added login and account creation functionality
-      // Hide all content initially and show login section
-      window.addEventListener("DOMContentLoaded", () => {
-        document.body.innerHTML = `
-        <div id="loginSection" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <h1>Login</h1>
-            <div style="display: flex; flex-direction: row; gap: 10px;">
-                <input type="text" id="firstName" placeholder="First Name" style="margin-bottom: 10px; width: 140px; font-size: 26px;">
-                <input type="text" id="lastName" placeholder="Last Name" style="margin-bottom: 10px; width: 140px; font-size: 26px;">
-            </div>
-            <input type="password" id="pin" placeholder="Enter Pin #" style="margin-bottom: 10px; width: 310px; font-size: 26px">
-            <button id="loginButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Login</button>
-            <button id="createAccountButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Create Account</button>
-        </div>
-        <div id="mainContent" style="display: none;">
-            ${document.body.innerHTML}
-        </div>
-    `;
-
+      if (test) {
+        bin_id = '68904e93ae596e708fc115c7'
+        currentUser = 'test test'
+        document.getElementById("mainContent").style.display = "block";
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("createAccountSection").style.display = "none";
+        init();
+      } else {
+        document.getElementById("loginSection").style.display = "flex";
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("createAccountSection").style.display = "none";
         document.getElementById("loginButton").addEventListener("click", handleLogin);
         document.getElementById("createAccountButton").addEventListener("click", showCreateAccountForm);
-      });
-
-      function showCreateAccountForm() {
-        const loginSection = document.getElementById("loginSection");
-        loginSection.innerHTML = `
-            <h1>Create Account</h1>
-            <div style="display: flex; flex-direction: row; gap: 10px;">
-                <input type="text" id="createAccountFirstName" placeholder="First Name" style="margin-bottom: 10px; width: 140px; font-size: 26px">
-                <input type="text" id="createAccountLastName" placeholder="Last Name" style="margin-bottom: 10px; width: 140px; font-size: 26px">
-            </div>
-            <input type="password" id="createAccountPin" placeholder="Enter Pin # (4 or more)" style="margin-bottom: 10px; width: 310px; font-size: 26px">
-            <input type="password" id="createAccountRePin" placeholder="Re-Enter Pin #" style="margin-bottom: 10px; width: 310px; font-size: 26px">
-        <button id="submitButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Submit</button>
-        <button id="backButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Back</button>
-    `;
-
         document.getElementById("submitButton").addEventListener("click", handleCreateAccount);
-        document.getElementById("backButton").addEventListener("click", () => location.reload());
+        document.getElementById("backButton").addEventListener("click", function () {
+          document.getElementById("createAccountSection").style.display = "none";
+          document.getElementById("loginSection").style.display = "flex";
+        });
+        init_login();
       }
+    });
 
-      async function handleCreateAccount() {
-        const firstName = document.getElementById("createAccountFirstName").value.trim();
-        const lastName = document.getElementById("createAccountLastName").value.trim();
-        const fullName = `${firstName} ${lastName}`;
-        const pin = document.getElementById("createAccountPin").value;
-        const rePin = document.getElementById("createAccountRePin").value;
-
-        if (!firstName || !lastName || !pin || !rePin) {
-          alert("All fields are required.");
-          return;
-        }
-
-        if (pin !== rePin) {
-          alert("Pins do not match.");
-          return;
-        }
-
-        if (pin.length < 4) {
-          alert("Pin must be at least 4 characters long.");
-          return;
-        }
-
-        if (!/^\d+$/.test(pin)) {
-          alert("Pin must be numeric.");
-          return;
-        }
-
-        if (mappings[fullName]) {
-          alert("Account already exists.");
-          return;
-        }
-
-        try {
-          bin_id = await generateBinId(firstName, lastName, pin);
-          mappings[fullName] = { pin: pin, bin_id: bin_id };
-          await saveData(mappings, mapping_bin_id);
-          location.reload();
-        } catch (error) {
-          console.error("Error creating account:", error);
-          alert("Failed to create account. Please try again.");
-        }
-      }
-
-      function handleLogin() {
-        const firstName = document.getElementById("firstName").value.trim();
-        const lastName = document.getElementById("lastName").value.trim();
-        const pin = document.getElementById("pin").value;
-
-        const fullName = `${firstName} ${lastName}`;
-
-        if (!mappings || !mappings[fullName] || mappings[fullName].pin !== pin) {
-          alert("Invalid credentials.");
-          return;
-        }
-
-        bin_id = mappings[fullName].bin_id;
-
-        if (bin_id === "root") {
-          alert("Comming Soon!")
-          return;
-        }
-
-        alert(`Welcome, ${fullName}!`);
-        currentUser = fullName;
-
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("mainContent").style.display = "block";
-        init(bin_id);
-      }
-
-
-
-      window.addEventListener("DOMContentLoaded", init_login);
+    function showCreateAccountForm() {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("createAccountSection").style.display = "flex";
+      document.getElementById("mainContent").style.display = "none";
     }
+
+    async function handleCreateAccount() {
+      const firstName = document.getElementById("createAccountFirstName").value.trim();
+      const lastName = document.getElementById("createAccountLastName").value.trim();
+      const fullName = `${firstName} ${lastName}`;
+      const pin = document.getElementById("createAccountPin").value;
+      const rePin = document.getElementById("createAccountRePin").value;
+
+      if (!firstName || !lastName || !pin || !rePin) {
+        alert("All fields are required.");
+        return;
+      }
+
+      if (pin !== rePin) {
+        alert("Pins do not match.");
+        return;
+      }
+
+      if (pin.length < 4) {
+        alert("Pin must be at least 4 characters long.");
+        return;
+      }
+
+      if (!/^\d+$/.test(pin)) {
+        alert("Pin must be numeric.");
+        return;
+      }
+
+      if (mappings[fullName]) {
+        alert("Account already exists.");
+        return;
+      }
+
+      try {
+        bin_id = await generateBinId(firstName, lastName, pin);
+        mappings[fullName] = { pin: pin, bin_id: bin_id };
+        await saveData(mappings, mapping_bin_id);
+        alert("Account created. Please log in.");
+        // Reset to login screen
+        document.getElementById("createAccountSection").style.display = "none";
+        document.getElementById("loginSection").style.display = "flex";
+      } catch (error) {
+        console.error("Error creating account:", error);
+        alert("Failed to create account. Please try again.");
+      }
+    }
+
+    function handleLogin() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const pin = document.getElementById("pin").value;
+
+      const fullName = `${firstName} ${lastName}`;
+
+      if (!mappings || !mappings[fullName] || mappings[fullName].pin !== pin) {
+        alert("Invalid credentials.");
+        return;
+      }
+
+      bin_id = mappings[fullName].bin_id;
+
+      if (bin_id === "root") {
+        alert("Comming Soon!")
+        return;
+      }
+
+      alert(`Welcome, ${fullName}!`);
+      currentUser = fullName;
+
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      init(bin_id);
+    }
+
+
 
   </script>
 </body>
