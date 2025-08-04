@@ -1445,8 +1445,12 @@
           headers: { "X-Master-Key": JSONBIN_KEY }
         });
         const data = await res.json();
-        mappings = data.record || {};
-      } catch (e) {
+        if (!data.record) {
+          console.warn("API response missing 'record' property or it is falsy. Falling back to empty object.", data);
+          mappings = {};
+        } else {
+          mappings = data.record;
+        }
         mappings = {};
       }
       setupLoginEvents();
