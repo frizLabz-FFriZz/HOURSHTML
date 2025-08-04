@@ -472,7 +472,15 @@
         },
         body: JSON.stringify({ payPeriods: {}, jobMeta: {}, user: currentUser }),
       });
-      if (!res.ok) throw new Error("Failed to create bin");
+      if (!res.ok) {
+        let errorDetails;
+        try {
+          errorDetails = await res.text();
+        } catch (e) {
+          errorDetails = "(failed to read response body)";
+        }
+        throw new Error(`Failed to create bin (status: ${res.status} ${res.statusText}): ${errorDetails}`);
+      }
       const data = await res.json();
       return data.metadata.id;
     }
