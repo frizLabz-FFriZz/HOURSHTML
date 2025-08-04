@@ -216,6 +216,12 @@
       font-size: 20px
     }
 
+    .btn-cancel {
+      background: #f44336;
+      color: #fff;
+      font-size: 18px
+    }
+
     .totals {
       font-weight: bold;
       background: #fafafa;
@@ -342,8 +348,6 @@
       color: #fff;
     }
 
-
-
     #loginSection #loginError {
       color: red;
       margin-top: 10px;
@@ -378,6 +382,9 @@
     <div style="display: flex; gap: 10px; width: 100%">
       <button class="btn btn-check half-btn margin-bottom" id="savePeriodBtn">
         Save Period
+      </button>
+      <button class="btn btn-cancel half-btn margin-bottom" id="cancelPeriodBtn">
+        Cancel
       </button>
       <button class="btn btn-view half-btn margin-bottom" id="viewPeriodsBtn">
         View Periods
@@ -1200,6 +1207,11 @@
         }
       });
 
+    document.getElementById("cancelPeriodBtn").addEventListener("click", () => {
+      document.getElementById("dateEditContainer").style.display = "none";
+      document.getElementById("periodDropdown").style.display = "none";
+    });
+    
     document.getElementById("savePeriodBtn").addEventListener("click", () => {
       const startDateInput = document.getElementById("startDateInput");
       const endDateInput = document.getElementById("endDateInput");
@@ -1256,31 +1268,123 @@
       .addEventListener("click", () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text(
-          `Invoice for ${formatPeriod(...currentPeriod.split("_to_"))}`,
-          10,
-          10
-        );
-        const jobs = state.payPeriods[currentPeriod]?.jobs || {};
+
+        // Add user's name at the top left
+        doc.setFontSize(14);
+        doc.text(`Name: ${currentUser}`, 10, 10);
+
+        // Add pay period at the top right with smaller font
+        doc.setFontSize(10);
+        const payPeriod = formatPeriod(...currentPeriod.split("_to_"));
+        doc.text(`Pay Period: ${payPeriod}`, 200, 10, { align: "right" });
+
         let y = 20;
-        for (const date in jobs) {
-          doc.text(`${formatDate(date)}:`, 10, y);
-          y += 10;
-          jobs[date].forEach((j) => {
-            doc.text(
-              `   ${j.job} - ${j.hours}h - ${j.desc} - ${j.address}`,
-              10,
-              y
-            );
-            y += 10;
+        const jobs = state.payPeriods[currentPeriod]?.jobs || {};
+        const allDates = Object.keys(jobs).sort((a, b) => new Date(b) - new Date(a)); // Reverse order of dates
+
+        // Add tables for each date
+        allDates.forEach((date) => {
+          const dailyJobs = jobs[date];
+          if (!dailyJobs || dailyJobs.length === 0) return;
+
+          // Add date above the table
+          y += 5; // Reduced padding between dates and tables
+          doc.setFontSize(12);
+          doc.setTextColor(0, 0, 255); // Blue color for the date
+          doc.text(formatDate(date), 10, y);
+
+          // Add table header with background color
+          y += 7; // Reduced spacing between tables
+          doc.setFontSize(10);
+          doc.setFillColor(200, 200, 200); // Light gray background
+          doc.rect(10, y - 5, 190, 7, "F");
+          doc.setTextColor(0, 0, 0); // Black text
+          doc.text("Job", 12, y);
+          doc.text("Hours", 100, y);
+          doc.text("Address", 130, y);
+          y += 7; // Adjusted spacing between rows
+
+          // Add jobs for the day with alternating row colors
+          let dailyTotal = 0;
+          dailyJobs.forEach((job, index) => {
+            const isEvenRow = index % 2 === 0;
+            doc.setFillColor(isEvenRow ? 240 : 235, 240, 240); // Alternating row colors
+            doc.rect(10, y - 5, 190, 7, "F");
+            doc.text(job.job || "", 12, y);
+            doc.text(job.hours ? job.hours.toFixed(1) : "0.0", 100, y);
+            doc.text(job.address || "", 130, y);
+            dailyTotal += job.hours || 0;
+            y += 7; // Adjusted spacing between rows
+
+            // Check if the page height is exceeded and add a new page if necessary
+            if (y > 280) {
+              doc.addPage();
+              y = 10;
+            }
           });
-        }
-        doc.text(
-          `Grand Total Hours: ${document.getElementById("grandTotal").innerText
-          }`,
-          10,
-          y + 10
-        );
+
+          // Add daily total with background color
+          doc.setFillColor(200, 200, 200); // Light gray background
+          doc.rect(10, y - 5, 190, 7, "F");
+          doc.setFontSize(10);
+          doc.text("Total", 12, y);
+          doc.text(dailyTotal.toFixed(1), 100, y);
+          y += 7; // Adjusted spacing between rows
+        });
+
+        // Add Jobs Summary
+        y += 5; // Reduced spacing before Job Summary
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 255); // Blue color for the header
+        doc.text("Jobs Summary", 10, y);
+        y += 7;
+
+        // Add header row for Jobs Summary
+        doc.setFontSize(10);
+        doc.setFillColor(200, 200, 200); // Light gray background for header
+        doc.rect(10, y - 5, 190, 7, "F");
+        doc.setTextColor(0, 0, 0); // Black text
+        doc.text("Job", 12, y);
+        doc.text("Hours", 100, y);
+        y += 7;
+
+        const jobTotals = {};
+        allDates.forEach((date) => {
+          const dailyJobs = jobs[date];
+          dailyJobs.forEach((job) => {
+            if (!jobTotals[job.job]) jobTotals[job.job] = 0;
+            jobTotals[job.job] += job.hours || 0;
+          });
+        });
+
+        let grandTotal = 0;
+        Object.keys(jobTotals).forEach((job, index) => {
+          const isEvenRow = index % 2 === 0;
+          doc.setFillColor(isEvenRow ? 240 : 235, 240, 240); // Alternating row colors matching other tables
+          doc.rect(10, y - 5, 190, 7, "F");
+          doc.setFontSize(10);
+          doc.setTextColor(0, 0, 0); // Black text
+          doc.text(job, 12, y);
+          doc.text(jobTotals[job].toFixed(1), 100, y);
+          grandTotal += jobTotals[job];
+          y += 7; // Adjusted spacing between rows
+
+          // Check if the page height is exceeded and add a new page if necessary
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+        });
+
+        // Add grand total with darker header color
+        doc.setFillColor(111, 118, 119); // Darker color for Grand Total
+        doc.rect(10, y - 5, 190, 7, "F");
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255); // White text
+        doc.text("Grand Total", 12, y);
+        doc.text(grandTotal.toFixed(1), 100, y);
+
+        // Save the PDF
         doc.save("invoice.pdf");
       });
 
