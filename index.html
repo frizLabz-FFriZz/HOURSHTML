@@ -94,12 +94,10 @@
       white-space: normal;
     }
 
+    /* Temporarily hide the Images column */
     .day-table th:nth-child(5),
     .day-table td:nth-child(5) {
-      /* Images */
-      width: 17.5%;
-      min-width: 17.5%;
-      text-align: center;
+      display: none;
     }
 
     .day-table th:nth-child(6),
@@ -227,6 +225,12 @@
       font-size: 18px
     }
 
+    .btn-logout {
+      background: #6b6b6b;
+      color: #ffffff;
+      font-size: 18px
+    }
+
     .totals {
       font-weight: bold;
       background: #fafafa;
@@ -301,7 +305,8 @@
     }
 
     /* Login section styles */
-    #loginSection, #createAccountSection {
+    #loginSection,
+    #createAccountSection {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -310,11 +315,13 @@
       color: #fff;
     }
 
-    #loginSection h1, #createAccountSection h1 {
+    #loginSection h1,
+    #createAccountSection h1 {
       margin-bottom: 20px;
     }
 
-    #loginSection input, #createAccountSection input {
+    #loginSection input,
+    #createAccountSection input {
       margin-bottom: 10px;
       padding: 10px;
       width: 300px;
@@ -323,7 +330,8 @@
       background: rgba(255, 255, 255, 0.8);
     }
 
-    #loginSection button, #createAccountSection button {
+    #loginSection button,
+    #createAccountSection button {
       margin-bottom: 10px;
       padding: 10px;
       width: 320px;
@@ -357,29 +365,56 @@
       color: red;
       margin-top: 10px;
     }
+
+    /* Notification styles */
+    #notification {
+      position: fixed;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: top 0.5s ease-in-out;
+    }
   </style>
 </head>
 
 <body>
   <div id="loginSection" style="display: none; flex-direction: column; align-items: center; justify-content: center;">
+    <a href="https://ibb.co/NgFdFnhr"><img src="https://i.ibb.co/HLKfKpvC/DDFGTDGDsdfsdf-G.png"
+        alt="Easton Construction Logo" border="0" /></a>
     <h1>Login</h1>
     <div style="display: flex; flex-direction: row; gap: 10px;">
-      <input type="text" id="firstName" placeholder="First Name" style="margin-bottom: 10px; width: 140px; font-size: 26px;">
-      <input type="text" id="lastName" placeholder="Last Name" style="margin-bottom: 10px; width: 140px; font-size: 26px;">
+      <input type="text" id="firstName" placeholder="First Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px;">
+      <input type="text" id="lastName" placeholder="Last Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px;">
     </div>
-    <input type="password" id="pinUnique" placeholder="Enter Pin #" style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <input type="password" id="pinUnique" placeholder="Enter Pin #"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
     <button id="loginButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Login</button>
     <button id="createAccountButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Create Account</button>
   </div>
 
-  <div id="createAccountSection" style="display: none; flex-direction: column; align-items: center; justify-content: center;">
+  <div id="createAccountSection"
+    style="display: none; flex-direction: column; align-items: center; justify-content: center;">
+    <a href="https://ibb.co/NgFdFnhr"><img src="https://i.ibb.co/HLKfKpvC/DDFGTDGDsdfsdf-G.png"
+        alt="Easton Construction Logo" border="0" /></a>
     <h1>Create Account</h1>
     <div style="display: flex; flex-direction: row; gap: 10px;">
-      <input type="text" id="createAccountFirstNameUnique" placeholder="First Name" style="margin-bottom: 10px; width: 140px; font-size: 26px">
-      <input type="text" id="createAccountLastNameUnique" placeholder="Last Name" style="margin-bottom: 10px; width: 140px; font-size: 26px">
+      <input type="text" id="createAccountFirstNameUnique" placeholder="First Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px">
+      <input type="text" id="createAccountLastNameUnique" placeholder="Last Name"
+        style="margin-bottom: 10px; width: 140px; font-size: 26px">
     </div>
-    <input type="password" id="createAccountPinUnique" placeholder="Enter Pin # (4 or more)" style="margin-bottom: 10px; width: 310px; font-size: 26px">
-    <input type="password" id="createAccountRePinUnique" placeholder="Re-Enter Pin #" style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <input type="password" id="createAccountPinUnique" placeholder="Enter Pin # (4 or more)"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
+    <input type="password" id="createAccountRePinUnique" placeholder="Re-Enter Pin #"
+      style="margin-bottom: 10px; width: 310px; font-size: 26px">
     <button id="submitButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Submit</button>
     <button id="backButton" style="margin-bottom: 10px; width: 330px; font-size: 26px">Back</button>
   </div>
@@ -439,6 +474,7 @@
     <div id="jobSummary"></div>
     <br />
     <div class="action-row">
+      <button class="btn btn-logout" id="logout">Logout</button>
       <button class="btn btn-generate" id="generateInvoice">Generate Invoice</button>
       <button class="btn btn-logs" id="toggleLogs">Show Logs</button>
       <button class="btn btn-meta" id="toggleMeta">Show Meta Data</button>
@@ -448,6 +484,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <script>
 
     const mapping_bin_id = "68902294f7e7a370d1f333e8"
@@ -725,7 +762,7 @@
         if (jobs[date]) jobs[date].forEach((j) => (dailyTotal += j.hours));
         const dayTable = document.createElement("table");
         const colgroup = document.createElement("colgroup");
-        ["10%", "8%", "25%", "30%", "11%", "11%"].forEach((w) => {
+        ["10%", "8%", "33%", "40%", "10%"].forEach((w) => {
           const col = document.createElement("col");
           col.style.width = w;
           colgroup.appendChild(col);
@@ -1251,130 +1288,144 @@
       }
     });
 
-    document
-      .getElementById("generateInvoice")
-      .addEventListener("click", () => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
 
-        // Add user's name at the top left
-        doc.setFontSize(14);
-        doc.text(`Name: ${currentUser}`, 10, 10);
+function generateInvoice() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-        // Add pay period at the top right with smaller font
-        doc.setFontSize(10);
-        const payPeriod = formatPeriod(...currentPeriod.split("_to_"));
-        doc.text(`Pay Period: ${payPeriod}`, 200, 10, { align: "right" });
+  const dayTables = document.querySelectorAll(".day-table");
+  const jobSummary = {};
+  let currentY = 20;
 
-        let y = 20;
-        const jobs = state.payPeriods[currentPeriod]?.jobs || {};
-        const allDates = Object.keys(jobs).sort((a, b) => new Date(b) - new Date(a)); // Reverse order of dates
+  doc.setFontSize(26);
+  doc.setFont(undefined, "bold");
+  doc.text(currentUser, 20, currentY);
+  doc.setFont(undefined, "normal");
+  doc.setFontSize(10);
+  doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 150, currentY - 1);
 
-        // Add tables for each date
-        allDates.forEach((date) => {
-          const dailyJobs = jobs[date];
-          if (!dailyJobs || dailyJobs.length === 0) return;
+  currentY += 10;
+  doc.setFontSize(14);
+  doc.text(`${formatPeriod(...currentPeriod.split("_to_"))}`, 20, currentY);
+  currentY += 15;
 
-          // Add date above the table
-          y += 5; // Reduced padding between dates and tables
-          doc.setFontSize(12);
-          doc.setTextColor(0, 0, 255); // Blue color for the date
-          doc.text(formatDate(date), 10, y);
+  dayTables.forEach((table) => {
+    const dateHeaderElement = table.querySelector(".day-header");
+    if (!dateHeaderElement) return;
 
-          // Add table header with background color
-          y += 7; // Reduced spacing between tables
-          doc.setFontSize(10);
-          doc.setFillColor(200, 200, 200); // Light gray background
-          doc.rect(10, y - 5, 190, 7, "F");
-          doc.setTextColor(0, 0, 0); // Black text
-          doc.text("Job", 12, y);
-          doc.text("Hours", 100, y);
-          doc.text("Address", 130, y);
-          y += 7; // Adjusted spacing between rows
+    const rows = table.querySelectorAll("tbody tr");
+    if (rows.length === 0) return;
 
-          // Add jobs for the day with alternating row colors
-          let dailyTotal = 0;
-          dailyJobs.forEach((job, index) => {
-            const isEvenRow = index % 2 === 0;
-            doc.setFillColor(isEvenRow ? 240 : 235, 240, 240); // Alternating row colors
-            doc.rect(10, y - 5, 190, 7, "F");
-            doc.text(job.job || "", 12, y);
-            doc.text(job.hours ? job.hours.toFixed(1) : "0.0", 100, y);
-            doc.text(job.address || "", 130, y);
-            dailyTotal += job.hours || 0;
-            y += 7; // Adjusted spacing between rows
+    const dateHeader = dateHeaderElement.textContent.trim();
+    const tableData = [];
+    let dailyTotal = 0;
 
-            // Check if the page height is exceeded and add a new page if necessary
-            if (y > 280) {
-              doc.addPage();
-              y = 10;
-            }
-          });
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll("td");
+      if (cells.length > 1 && cells[0].textContent.trim() !== "Total") {
+        const job = cells[0].textContent.trim();
+        const hours = parseFloat(cells[1].textContent.trim()) || 0;
+        const address = cells[2].textContent.trim();
+        tableData.push([job, hours.toFixed(1), address]);
+        if (job) {
+          if (!jobSummary[job]) jobSummary[job] = 0;
+          jobSummary[job] += hours;
+        }
+        dailyTotal += hours;
+      }
+    });
 
-          // Add daily total with background color
-          doc.setFillColor(200, 200, 200); // Light gray background
-          doc.rect(10, y - 5, 190, 7, "F");
-          doc.setFontSize(10);
-          doc.text("Total", 12, y);
-          doc.text(dailyTotal.toFixed(1), 100, y);
-          y += 7; // Adjusted spacing between rows
-        });
+    // Add the Total row for this day (entire row styled dark blue)
+    if (tableData.length > 0) {
+      tableData.push([
+        { content: "Total", styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255] } },
+        { content: dailyTotal.toFixed(1), styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255] } },
+        { content: "", styles: { fillColor: [44, 62, 80], textColor: [255, 255, 255] } }
+      ]);
 
-        // Add Jobs Summary
-        y += 5; // Reduced spacing before Job Summary
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 255); // Blue color for the header
-        doc.text("Jobs Summary", 10, y);
-        y += 7;
-
-        // Add header row for Jobs Summary
-        doc.setFontSize(10);
-        doc.setFillColor(200, 200, 200); // Light gray background for header
-        doc.rect(10, y - 5, 190, 7, "F");
-        doc.setTextColor(0, 0, 0); // Black text
-        doc.text("Job", 12, y);
-        doc.text("Hours", 100, y);
-        y += 7;
-
-        const jobTotals = {};
-        allDates.forEach((date) => {
-          const dailyJobs = jobs[date];
-          dailyJobs.forEach((job) => {
-            if (!jobTotals[job.job]) jobTotals[job.job] = 0;
-            jobTotals[job.job] += job.hours || 0;
-          });
-        });
-
-        let grandTotal = 0;
-        Object.keys(jobTotals).forEach((job, index) => {
-          const isEvenRow = index % 2 === 0;
-          doc.setFillColor(isEvenRow ? 240 : 235, 240, 240); // Alternating row colors matching other tables
-          doc.rect(10, y - 5, 190, 7, "F");
-          doc.setFontSize(10);
-          doc.setTextColor(0, 0, 0); // Black text
-          doc.text(job, 12, y);
-          doc.text(jobTotals[job].toFixed(1), 100, y);
-          grandTotal += jobTotals[job];
-          y += 7; // Adjusted spacing between rows
-
-          // Check if the page height is exceeded and add a new page if necessary
-          if (y > 280) {
-            doc.addPage();
-            y = 10;
-          }
-        });
-
-        // Add grand total with darker header color
-        doc.setFillColor(111, 118, 119); // Darker color for Grand Total
-        doc.rect(10, y - 5, 190, 7, "F");
-        doc.setFontSize(12);
-        doc.setTextColor(255, 255, 255); // White text
-        doc.text("Grand Total", 12, y);
-        doc.text(grandTotal.toFixed(1), 100, y);
-
-        // Save the PDF
-        doc.save("invoice.pdf");
+      doc.autoTable({
+        head: [[dateHeader]],
+        body: [],
+        startY: currentY,
+        theme: "plain",
+        styles: {
+          fontStyle: "bold",
+          fontSize: 14,
+          textColor: [44, 62, 80]
+        },
+        margin: { left: 15, right: 15 },
+        pageBreak: 'avoid'
       });
+      currentY = doc.lastAutoTable.finalY;
+
+      doc.autoTable({
+        head: [["Job", "Hours", "Address"]],
+        body: tableData,
+        startY: currentY,
+        theme: "grid",
+        styles: {
+          overflow: "linebreak",
+          textColor: [0, 0, 0],
+          fillColor: [240, 248, 255]
+        },
+        headStyles: {
+          fillColor: [44, 62, 80],
+          textColor: [255, 255, 255]
+        },
+        alternateRowStyles: {
+          fillColor: [220, 230, 241]
+        },
+        margin: { left: 15, right: 15 },
+        pageBreak: 'avoid'
+      });
+      currentY = doc.lastAutoTable.finalY + 10;
+    }
+  });
+
+  // Job Summary: "Job Summary" full-width row, then headers, then data
+  const summaryData = [];
+  summaryData.push([
+    { content: "Job Summary", colSpan: 2, styles: { fontStyle: 'bold', fontSize: 14, textColor: [44, 62, 80], halign: 'center' } }
+  ]);
+  summaryData.push([
+    { content: "Job", styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255], halign: 'center' } },
+    { content: "Total Hours", styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255], halign: 'center' } }
+  ]);
+
+  let grandTotalHours = 0;
+  Object.entries(jobSummary)
+    .forEach(([job, hours]) => {
+      summaryData.push([job, hours.toFixed(1)]);
+      grandTotalHours += hours;
+    });
+  summaryData.push([
+    { content: "Grand Total", styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255] } },
+    { content: grandTotalHours.toFixed(1), styles: { fontStyle: 'bold', fillColor: [44, 62, 80], textColor: [255, 255, 255] } }
+  ]);
+
+  doc.autoTable({
+    body: summaryData,
+    startY: currentY,
+    theme: "grid",
+    styles: {
+      overflow: "linebreak",
+      textColor: [0, 0, 0],
+      fillColor: [240, 248, 255]
+    },
+    alternateRowStyles: {
+      fillColor: [220, 230, 241]
+    },
+    margin: { left: 15, right: 15 },
+    pageBreak: "avoid"
+  });
+
+  doc.save(`${currentUser}_${currentPeriod}_invoice.pdf`);
+}
+
+
+
+
+    document.getElementById("generateInvoice").addEventListener("click", generateInvoice);
 
     document.getElementById("toggleLogs").addEventListener("click", () => {
       const panel = document.getElementById("logPanel");
@@ -1474,52 +1525,36 @@
       document.getElementById("mainContent").style.display = "none";
     }
 
-    async function handleCreateAccount() {
-      const firstName = document.getElementById("createAccountFirstNameUnique").value.trim();
-      const lastName = document.getElementById("createAccountLastNameUnique").value.trim();
-      const fullName = `${firstName} ${lastName}`;
-      const pin = document.getElementById("createAccountPinUnique").value;
-      const rePin = document.getElementById("createAccountRePinUnique").value;
+    // Function to show a dropdown notification
+    function showNotification(message, isError = false) {
+      let notification = document.getElementById("notification");
 
-      if (!firstName || !lastName || !pin || !rePin) {
-        alert("All fields are required.");
-        return;
+      if (!notification) {
+        notification = document.createElement("div");
+        notification.id = "notification";
+        notification.style.position = "fixed";
+        notification.style.top = "-50px";
+        notification.style.left = "50%";
+        notification.style.transform = "translateX(-50%)";
+        notification.style.color = "white";
+        notification.style.padding = "10px 20px";
+        notification.style.borderRadius = "5px";
+        notification.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+        notification.style.zIndex = "1000";
+        notification.style.transition = "top 0.5s ease-in-out";
+        document.body.appendChild(notification);
       }
 
-      if (pin !== rePin) {
-        alert("Pins do not match.");
-        return;
-      }
+      notification.style.backgroundColor = isError ? "#f44336" : "#4CAF50"; // Red for errors, green for success
+      notification.textContent = message;
+      notification.style.top = "20px";
 
-      if (pin.length < 4) {
-        alert("Pin must be at least 4 characters long.");
-        return;
-      }
-
-      if (!/^\d+$/.test(pin)) {
-        alert("Pin must be numeric.");
-        return;
-      }
-
-      if (mappings[fullName]) {
-        alert("Account already exists.");
-        return;
-      }
-
-      try {
-        bin_id = await generateBinId(firstName, lastName, pin);
-        mappings[fullName] = { pin: pin, bin_id: bin_id };
-        await saveData(mappings, mapping_bin_id);
-        alert("Account created. Please log in.");
-        // Reset to login screen
-        document.getElementById("createAccountSection").style.display = "none";
-        document.getElementById("loginSection").style.display = "flex";
-      } catch (error) {
-        console.error("Error creating account:", error);
-        alert("Failed to create account. Please try again.");
-      }
+      setTimeout(() => {
+        notification.style.top = "-50px";
+      }, 2000);
     }
 
+    // Modify handleLogin to use the notification with error styling
     function handleLogin() {
       const firstName = document.getElementById("firstName").value.trim();
       const lastName = document.getElementById("lastName").value.trim();
@@ -1528,19 +1563,23 @@
       const fullName = `${firstName} ${lastName}`;
 
       if (!mappings || !mappings[fullName] || mappings[fullName].pin !== pin) {
-        alert("Invalid credentials.");
+        showNotification("Invalid credentials.", true);
         return;
       }
 
       bin_id = mappings[fullName].bin_id;
 
       if (bin_id === "root") {
-        alert("Coming Soon!");
+        showNotification("Coming Soon!", true);
         return;
       }
 
-      alert(`Welcome, ${fullName}!`);
       currentUser = fullName;
+      showNotification(`Welcome, ${fullName}!`);
+
+      // Set a cookie to remember the user
+      setCookie("user", fullName, 7); // Cookie expires in 7 days
+      setCookie("pin", pin, 7);
 
       // Hide login section and show main content
       document.getElementById("loginSection").style.display = "none";
@@ -1550,7 +1589,89 @@
       init(bin_id);
     }
 
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      const expires = `expires=${date.toUTCString()}`;
+      document.cookie = `${name}=${value};${expires};path=/`;
+    }
 
+    // Helper function to get a cookie
+    function getCookie(name) {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(`${name}=`)) {
+          return cookie.substring(name.length + 1);
+        }
+      }
+      return null;
+    }
+
+    // Helper function to delete a cookie
+    function deleteCookie(name) {
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    }
+
+
+    // Modify handleCreateAccount to use the notification with error styling
+    async function handleCreateAccount() {
+      const firstName = document.getElementById("createAccountFirstNameUnique").value.trim();
+      const lastName = document.getElementById("createAccountLastNameUnique").value.trim();
+      const fullName = `${firstName} ${lastName}`;
+      const pin = document.getElementById("createAccountPinUnique").value;
+      const rePin = document.getElementById("createAccountRePinUnique").value;
+
+      if (!firstName || !lastName || !pin || !rePin) {
+        showNotification("All fields are required.", true);
+        return;
+      }
+
+      if (pin !== rePin) {
+        showNotification("Pins do not match.", true);
+        return;
+      }
+
+      if (pin.length < 4) {
+        showNotification("Pin must be at least 4 characters long.", true);
+        return;
+      }
+
+      if (!/^\d+$/.test(pin)) {
+        showNotification("Pin must be numeric.", true);
+        return;
+      }
+
+      if (mappings[fullName]) {
+        showNotification("Account already exists.", true);
+        return;
+      }
+
+      try {
+        bin_id = await generateBinId(firstName, lastName, pin);
+        mappings[fullName] = { pin: pin, bin_id: bin_id };
+        await saveData(mappings, mapping_bin_id);
+        showNotification("Account created. Please log in.");
+
+        // Reset to login screen
+        document.getElementById("createAccountSection").style.display = "none";
+        document.getElementById("loginSection").style.display = "flex";
+      } catch (error) {
+        console.error("Error creating account:", error);
+        showNotification("Failed to create account. Please try again.", true);
+      }
+    }
+
+    // Add a logout function to clear cookies
+    function handleLogout() {
+      deleteCookie("user");
+      deleteCookie("pin");
+      alert("You have been logged out.");
+      location.reload();
+    }
+
+    const logoutButton = document.createElement("button");
+    logoutButton.onclick = handleLogout;
 
   </script>
 </body>
